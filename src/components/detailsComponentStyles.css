@@ -1,0 +1,221 @@
+
+.primaryBackground{
+		background-color: #656684;
+	}
+	.seconderyBackground{
+		background-color: #ffa257;
+	}
+	.primaryColor{
+		color: #656684;
+	}
+	.seconderyColor{
+		color: #ffa257;
+	}
+	
+	.basetxtColor{
+		color:white;
+		
+	}
+	.head1{
+	background-color:  #656684;
+	}
+	.mainImg{
+ 	height:215px;
+ 	width: 215px;
+ 	margin-left:0;
+	 margin-right:0; 
+	}
+	.featuredRow{
+		background-color:white;
+		margin-top:0;
+		margin-bottom:10px;
+		
+	}
+	.booth{
+		margin-left:0;
+		padding:0;
+		margin-bottom:1px;
+		margin-top:1px;
+		
+	}
+	.interested{
+		margin-bottom:1px;
+		margin-top:1px;
+		align-items: center;
+	}
+	.sbtns{
+		cursor:pointer;
+		padding-left : 30%;
+		padding-right : 30%;
+	}
+	.headcontent{
+		margin-left:0;
+
+		
+	}
+	.evntDetails{
+
+	}
+	.one{
+		
+		padding:0;
+	}
+
+	
+	.two{
+		background-color:white;
+		margin-top:15px;
+	}
+	.fbtns{
+		border-color: white;
+		display: inline-block;
+		margin-left:0;
+		background-color:#ffa257;
+		border-radius: 7px;
+		color:white;
+		font-size: 110%;
+		margin-bottom:1%;
+		margin-top:1%;
+		padding: 0.7%;
+		width: 20%;
+	}
+	.fbtns1{
+		padding: 0.7%;
+		border-radius: 7px;
+		border-color: white;
+		display: inline-block;
+		background-color:#ffa257;
+		color:white;
+		font-size: 110%;
+		margin-left:1%;
+		margin-bottom:1%;
+		margin-top:1%;
+		width: 20%;
+	}
+	.fbtns2{
+		padding-top: 2%;
+		padding-bottom: 2%;
+		padding-right: 5%;
+		padding-left: 5%;
+		border-radius: 7px;
+		border-color: white;
+		display: inline-block;
+		background-color:#ffa257;
+		color:white;
+		font-size: 110%;
+		margin-top:7%;
+		width: 70%;
+	}
+
+	
+	.selectionBtn{
+		width: 20%;
+		border : 0.1px solid #d3d3d3;
+		background-color: white;
+		color: #656684;
+	}
+	.bodytags{
+		margin-left : 1%;
+		border-radius : 6px;
+		padding:0.5%;
+		background-color : #ffa257;
+		border:#ffa257;
+		color:white;
+	}
+	.extraImgs{
+		width : 50%;
+		padding-left:5%;
+		padding-right : 5%;
+		padding-top : 2%;
+		padding-bottom : 2%;
+		
+	}
+	img.extraImgs{
+		display: inline;
+	}
+	.clrBrdr{
+		border-bottom : 3px solid #ffa257;
+	}
+	.tst{
+		border: 1 px solid red;
+	}
+	.related{
+		border-bottom: 2px solid #ffa257;
+
+	}
+	.alpha{
+		
+		margin-top: 0;
+		text-align: center;
+		margin-bottom: 5%;
+
+	}
+	.beta{
+		
+		text-align: center;
+		margin-bottom: 5%;
+		margin-left: 10px;
+
+	}
+	.gamma{
+		
+		text-align: center;
+		margin-bottom: 5%;
+
+	}
+	.colHeadings{
+		background-color: white;
+	}
+	.relatedCityEventDate{
+		font-size: 15px;
+
+	}
+	.relatedCityEventName{
+		font-size: 15px;
+
+	}
+	.relatedCityEventCityname{
+		font-size: 15px;
+
+	}
+	.relatedCategoryEventDate{
+		font-size: 15px;
+	}
+	.relatedCategoryEventName{
+		font-size: 15px;
+	}
+	.relatedCategoryEventCityname{
+		font-size: 15px;
+	}
+	.relatedEventsData{
+		cursor: pointer;
+	}
+	.goingCount{
+		background-color: #656684;
+		padding-left: 3%;
+		padding-right: 3%;
+		border-radius: 50%;
+		float: right;
+	}
+	.socialIconsDivShow{
+		width : 30%;
+		height : 10%;
+		margin-left: 35%;
+		margin-top: 17%;
+		border: 5px solid #ffa257;
+		position: fixed;
+		z-index: 2;
+		background-color: white;
+		border-radius: 20px;
+		display: block;
+	}
+	.socialIconsDivHide{
+		display: none;
+	}
+	.socialIcons{
+		padding-top: 2%;
+		padding-left: 5%;
+	}
+	.cross:hover{
+		cursor: pointer;
+	}

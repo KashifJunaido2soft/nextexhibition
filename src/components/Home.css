@@ -1,0 +1,188 @@
+.head1{
+        padding-top: 2%;
+      	padding-bottom: 4%;
+        padding-right: 0;
+        padding-left: 0;
+        margin: 0;
+
+  }
+
+
+ .body{
+  	background-color: #f0f0f0;
+    margin: 0;
+    margin-bottom: 0;
+    padding: 0;
+    width: 100%;
+	}
+	.primaryBackground{
+		background-color: #656684;
+	}
+	.seconderyBackground{
+		background-color: #ffa257;
+	} 
+	.primaryColor{
+		color: #656684;
+	}
+	.seconderyColor{
+		color: #ffa257;
+	}
+  .newBtn{
+  	  background-color:#ffa257;
+  	  color: white;
+  	  text-decoration: none;
+  	  border-color:#ffa257;
+  	  margin-left:10px; 
+  	  width: 30%;
+  	  padding:5px;
+	}
+.cardImg{
+	width:90%;
+	height:50%;
+	text-align: center;
+	margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 5%;
+} 
+.sbar{
+  	padding:5px;
+  	width: 60%;
+  }
+  .first{
+  	text-align: center;
+
+  }
+  .main{
+  	color: white;
+  	margin-bottom: 20px;
+  	text-align: center;
+  	text-decoration: none;
+
+  }
+
+ .main1{
+  	display: inline;
+  	color: #ffa257;
+  	
+  }
+ 
+  #one{
+  	color: white;
+  	text-align: center;
+  }
+  #one1{
+  	font-size: 70%;
+  	color: white;
+  }
+ 
+  .featuredRow{
+   margin-top: 3%;
+   
+   }
+
+  .citiesFilter{
+    margin-left:15px; 
+   	background-color: white;
+   	height: auto;
+    margin-top: 5px;
+    border-bottom:2px solid #656684;
+
+  }
+  .categoryFilter{
+    margin-left:15px; 
+  	background-color: white;
+   	height: auto;
+    border-bottom:2px solid #656684;
+    
+  }
+  .addsHome{
+    margin-left:15px; 
+    height: auto;
+    background-color: white;
+    border-bottom:2px solid #656684;
+    
+  }
+  .tagsFilter{
+  	background-color: white;
+   	height: auto;
+    margin-bottom: 15px;
+    margin-left:10px; 
+    border-bottom:2px solid #656684;
+  }
+  
+   .featured{
+   	color: #656684;
+   	font-size: 65%;
+   }
+   .structure{
+   	margin-bottom: 20px;
+   	height: 300px;
+   	 
+   }
+   .t1{
+   	font-size: 13px;
+   }
+   .t2{
+   	font-size: 13px;
+   	color: grey;
+   }
+   .categories{
+   	margin-left: 18px;
+   	color: #656684;
+   }
+   .links{
+   	font-size: 15px;
+    cursor:pointer;
+
+   }
+  
+   .listColor{
+    color:#656684; 
+   }
+   a,a:link,a:visited,a:hover,a:active {
+  color: #656684;
+  text-decoration: none;
+ }
+ .eventTag{
+ 	color: #656684;
+ 	font-size:  15px;
+  margin-left: 5%;
+
+ }
+ .eventTag2{
+  margin-left: 5px;
+
+ }
+
+ h6{
+ 	color: #ffa257;
+ }
+ 
+ h8{
+ 	color: #ffa257;
+ }
+ .ff{
+  margin-left: 0px;
+ }
+ .footerr{
+  margin-bottom: 0%;
+ 
+ }
+  a.main2{
+  color: white;
+  font-size:15px;
+ }
+
+ .main2{
+      display: block;
+      
+  }
+  .headingsAlign{
+    text-align: center;
+  }
+  .noData{
+    text-align: center;
+    color:#ffa257;
+    margin-top: 5%;
+    margin-left: 40%;
+  }

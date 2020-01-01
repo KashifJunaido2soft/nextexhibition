@@ -1,0 +1,29 @@
+.primaryBackground{
+	background-color: #656684;
+}
+.footerMainDiv{
+	padding: 2%;
+
+}
+
+.tinyTxt{
+  	font-size: 70%;
+  	color: white;
+  }
+ .s_icons{
+ 	margin-left: 5px;
+ }
+ .inlineDisplay{
+  	display: inline;
+  	
+  	
+  }
+  .quickLinks{
+  	display: block;
+  	color: white;
+
+  }
+ a.quickLinks{
+  	color: white;
+ 	font-size:15px;
+  }
