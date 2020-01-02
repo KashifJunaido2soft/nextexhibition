@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import './Home.css';
+import '../assets/css/Home.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from 'axios'; //adding import statement
-import { SocialIcon } from 'react-social-icons';
 import { Link } from 'react-router-dom';
 import Footer from "./footerComponent";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import Loader from 'react-loader-spinner';
 
 export default class Home extends Component {
 	constructor(props){
@@ -19,16 +20,18 @@ export default class Home extends Component {
 			cityId:'',
 			CategoryId:'',
 			search:'',
+			apiBaseUrl : 'http://64.225.33.244:8000/',
+			loading : true
 		} 
 		//this.searchEvent = this.searchEvent.bind(this);
 	}
 
 	componentDidMount(){
 		
-		let one ="http://64.225.33.244:8000/event/allEvents/";
-		let two ="http://64.225.33.244:8000/event/allCities/";
-		let three ="http://64.225.33.244:8000/event/allTypes/";
-		let four ="http://64.225.33.244:8000/event/allTags/";
+		let one = this.state.apiBaseUrl + "event/allEvents/";
+		let two = this.state.apiBaseUrl + "event/allCities/";
+		let three = this.state.apiBaseUrl + "event/allTypes/";
+		let four = this.state.apiBaseUrl + "event/allTags/";
 
 		const requestOne = axios.get(one);
 		const requestTwo = axios.get(two);
@@ -36,10 +39,6 @@ export default class Home extends Component {
 		const requestFour = axios.get(four);
 
 		axios.all([requestOne, requestTwo, requestThree, requestFour]).then(axios.spread((...responses) => {
-			// console.log('here i am');
-			// console.log(responses);
-			
-
 			const responseOne = responses[0];
 			const responseTwo = responses[1];
 			const responseThree = responses[2];
@@ -49,15 +48,19 @@ export default class Home extends Component {
 				cities:responseTwo.data,
 				types:responseThree.data,
 				tags:responseFour.data,
+				loading : false
 			})
-})).catch(errors => {
-			  console.log(errors);
-		})
-	}
+		})).catch(errors => {
+				console.log(errors);
+			})
+		}
 
 
 	getEventByCity(id){
-		var url = 'http://64.225.33.244:8000/event/allEvents/?event_city='+id;
+		this.setState({
+			loading : true
+		})
+		var url = this.state.apiBaseUrl + 'event/allEvents/?event_city='+id;
 		let tagslist = this.state.checkBoxStatus;
 		if(tagslist.length > 0){
 			for(var i = 0 ; i < tagslist.length; i++){
@@ -65,15 +68,15 @@ export default class Home extends Component {
 	        }
 		}
 		let eventCategory = this.state.CategoryId;
-		if(eventCategory != ''){
+		if(eventCategory !== ''){
 			url = url+'&event_type=' + eventCategory;
 		}
 		
 		axios.get(url)
 		.then(response => {
-			
 			this.setState({
-				events:response.data.results
+				events:response.data.results,
+				loading : false
 			})
 		})
 		.catch(error =>{
@@ -81,10 +84,12 @@ export default class Home extends Component {
 		})
 	}
 	getEventByCategory(id){
-		var url='http://64.225.33.244:8000/event/allEvents/?event_type='+id;
-		
+		this.setState({
+			loading : true
+		})
+		var url = this.state.apiBaseUrl + 'event/allEvents/?event_type='+id;
 		let eventCity=this.state.cityId;
-		if(eventCity != ''){
+		if(eventCity !== ''){
 			url=url + '&event_city=' + eventCity;
 		}
 		
@@ -97,7 +102,8 @@ export default class Home extends Component {
 		axios.get(url)
 		.then(response => {
 			this.setState({
-				events:response.data.results
+				events:response.data.results,
+				loading : false
 			})
 		})
 		.catch(error =>{
@@ -107,40 +113,44 @@ export default class Home extends Component {
 	
 	
 	getEventByTag(event,id){
+		this.setState({
+			loading : true
+		})
 		var tagslist = this.state.checkBoxStatus;
-		if(event.target.checked == true){
+		if(event.target.checked === true){
 			tagslist.push(id);
-		}else if(event.target.checked == false){
+		}else if(event.target.checked === false){
 			tagslist = tagslist.filter((arrId) => arrId !== id)
 		}
 		this.setState({
 			checkBoxStatus:tagslist,	
 		})
 
-		var url = 'http://64.225.33.244:8000/event/allEvents';
+		var url = this.state.apiBaseUrl + 'event/allEvents';
 
 		
 		if(tagslist.length > 0){
-			var url = 'http://64.225.33.244:8000/event/allEvents/?event_tag='+tagslist[0];
+			url = this.state.apiBaseUrl + 'event/allEvents/?event_tag='+tagslist[0];
 		}
 		for(var i = 1 ; i < tagslist.length; i++){
 			url = url+'&event_tag=' + tagslist[i];
         }
         
         let eventCity=this.state.cityId;
-        if(eventCity != ''){
+        if(eventCity !== ''){
 			url=url + '&event_city=' + eventCity;
 		}
 		
 		let eventCategory = this.state.CategoryId;
-		if(eventCategory != ''){
+		if(eventCategory !== ''){
 			url = url+'&event_type=' + eventCategory;
 		}
         axios.get(url)
 		.then((response) => {
 			console.log(response.data.results.length);
 	        this.setState({
-	        	events : response.data.results
+				events : response.data.results,
+				loading : false
 	        })
 		})
 		.catch(error =>{
@@ -196,7 +206,7 @@ export default class Home extends Component {
 	}
 
 	searchFieldChange(event){
-		if(event.target.value == ''){
+		if(event.target.value === ''){
 			this.searchEvent(event)
 		}
 		this.setState({
@@ -205,11 +215,15 @@ export default class Home extends Component {
 	}
 
 	searchEvent(event){
-		var url = 'http://64.225.33.244:8000/event/allEvents/?search='+this.state.search;
+		this.setState({
+			loading : true
+		})
+		var url = this.state.apiBaseUrl + 'event/allEvents/?search='+this.state.search;
 		axios.get(url)
 		.then(response => {
 			this.setState({
-				events:response.data.results
+				events:response.data.results,
+				loading : false
 			})
 		})
 		.catch(error =>{
@@ -217,8 +231,33 @@ export default class Home extends Component {
 		})
 		event.preventDefault();
 	}
+
+	getAllEvents(){
+		this.setState({
+			loading : true
+		})
+		var url = this.state.apiBaseUrl + 'event/allEvents/';
+		axios.get(url)
+		.then(response => {
+			this.setState({
+				events : response.data.results,
+				loading : false
+			})
+		})
+		.catch(error =>{
+			console.log(error);
+		})
+	}
 	render() {
 		var noData = <h1 className='noData'>Sorry No Data</h1>
+		var dataLoader = <Loader
+			type="Oval"
+			color="#ffa257"
+			height={100}
+			width={100}
+			className='noData'
+			timeout={0} //time in millisecond
+		/>
     	var resultedDiv = [];
     	if(this.state.events.length > 0){
     		
@@ -290,19 +329,25 @@ export default class Home extends Component {
 
 			        	<div class="col-md-8">
 			        		<div class="row events">
-								{resultedDiv.length > 0 ? resultedDiv : noData}
+								{this.state.loading ? (dataLoader) : (resultedDiv.length > 0 ? resultedDiv : noData) }
 			        		</div>
 			        	</div>
 
 			        	<div class="col-md-2">
 			        			<div className="citiesFilter">
 				        			<h6 className="headingsAlign">Popular cities</h6>
+									<div class="col-md-2">
+										<a className="links" onClick={() => this.getAllEvents()}> <span className="listColor">All</span></a><br/>
+									</div>
 									{citiesArr}
 			        			</div>
 			        			<br/>
 
 			        			<div className="categoryFilter">
 			        				<h6 className="headingsAlign">Event Category</h6>
+									<div class="col-md-2">
+										<a className="links" onClick={() => this.getAllEvents()}> <span className="listColor">All</span></a><br/>
+									</div>
 									{categoriesArr}<br/>	
 								</div>
 								<br/>

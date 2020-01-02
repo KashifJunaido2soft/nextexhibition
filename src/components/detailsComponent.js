@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './detailsComponentStyles.css';
+import '../assets/css/detailsComponentStyles.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from 'axios'; //adding import statement
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Footer from "./footerComponent";
 import { withRouter } from "react-router";
 import {
@@ -44,15 +44,17 @@ class Details extends Component {
 			moreventsinCity : [],
 			allCities:[],
 			relatedEventByName : '',
-			socialIconClass:'socialIconsDivHide'
+			socialIconClass:'socialIconsDivHide',
+			apiBaseUrl : 'http://64.225.33.244:8000/',
+			baseUrl : 'http://64.225.33.244:3000/',
+			baseLink : 'http://www.nextexibition.com/'
 		}
 	}
 	componentDidMount(){
 		const id = this.props.match.params.id;
-		console.log(id)
-		let eventUrl ='http://64.225.33.244:8000/event/allEvents/?id='+id;
-		let cityUrl ="http://64.225.33.244:8000/event/allCities/";
-		let tagsUrl ="http://64.225.33.244:8000/event/allTags/";
+		let eventUrl = this.state.apiBaseUrl + 'event/allEvents/?id='+id;
+		let cityUrl = this.state.apiBaseUrl + "event/allCities/";
+		let tagsUrl = this.state.apiBaseUrl + "event/allTags/";
 		
 		const cityDataReq = axios.get(cityUrl);
 		const tagsDataReq = axios.get(tagsUrl);
@@ -70,16 +72,16 @@ class Details extends Component {
 
 			var thisEventCity='';
 			
-			for(var i = 0; i < allCitieslen; i++){
-				var target = eventDataRes.event_city;
+			for(let i = 0; i < allCitieslen; i++){
+				let target = eventDataRes.event_city;
 				if(target === cityDataRes[i].id){
 					thisEventCity = cityDataRes[i].name
 					break;
 				}
 			}
 			var thisEventTags=[];
-			for(var i = 0 ; i < eventTagslen ; i++){
-				for(var j = 0 ; j < totalTagslen ; j++){
+			for(let i = 0 ; i < eventTagslen ; i++){
+				for(let j = 0 ; j < totalTagslen ; j++){
 					if(eventDataRes.event_tag[i] === tagsDataRes[j].id){
 						thisEventTags.push(tagsDataRes[j].name);
 						break;
@@ -93,7 +95,7 @@ class Details extends Component {
 				eventCity : thisEventCity,
 				allCities : cityDataRes
 			})
-			axios.get('http://64.225.33.244:8000/event/allEvents?event_type=' + eventDataRes.event_type)
+			axios.get(this.state.apiBaseUrl + 'event/allEvents?event_type=' + eventDataRes.event_type)
 	        .then(response => {
 	            this.setState({relatedEvents : response.data.results});
 	        })
@@ -101,9 +103,8 @@ class Details extends Component {
 	            console.log(error);
 	        })
 
-	        axios.get('http://64.225.33.244:8000/event/allEvents?event_city=' + eventDataRes.event_city)
+	        axios.get(this.state.apiBaseUrl + 'event/allEvents?event_city=' + eventDataRes.event_city)
 	        .then(response => {
-	        	// console.log(response.data.results)
 	            this.setState({moreventsinCity : response.data.results});
 	        })
 	        .catch(function (error){
@@ -115,7 +116,7 @@ class Details extends Component {
 	}	
 
 	getEventDetailsByName(id){
-		var url='http://64.225.33.244:8000/event/allEvents/?id=' + id;
+		var url = this.state.apiBaseUrl + 'event/allEvents/?id=' + id;
 		axios.get(url)
 		.then(response => {
 			this.setState({eventDeatail : response.data.results[0]});
@@ -125,7 +126,7 @@ class Details extends Component {
 		})
 	}
 	getEventDetailsByName2(id){
-		var url='http://64.225.33.244:8000/event/allEvents/?id=' + id;
+		var url = this.state.apiBaseUrl + 'event/allEvents/?id=' + id;
 		axios.get(url)
 		.then(response => {
 			this.setState({eventDeatail : response.data.results[0]});
@@ -136,7 +137,7 @@ class Details extends Component {
 	}
 	
 	selectContent(name){
-		if(name == 'about'){
+		if(name === 'about'){
 			this.setState({
 				About : '1',
 				Reviews : '0',
@@ -146,7 +147,7 @@ class Details extends Component {
 
 			})
 		}
-		else if(name == 'reviews'){
+		else if(name === 'reviews'){
 			this.setState({
 				Reviews : '1',
 				About : '0',
@@ -155,7 +156,7 @@ class Details extends Component {
 				Speakers : '0',
 			})
 		}
-		else if(name == 'exibitors'){
+		else if(name === 'exibitors'){
 			this.setState({
 				Exibitors : '1',
 				About : '0',
@@ -164,7 +165,7 @@ class Details extends Component {
 				Speakers : '0',
 			})
 		}
-		else if(name == 'photos'){
+		else if(name === 'photos'){
 			this.setState({
 				Photos : '1',
 				About : '0',
@@ -174,7 +175,7 @@ class Details extends Component {
 			})
 				
 		}
-		else if(name == 'speakers'){
+		else if(name === 'speakers'){
 			this.setState({
 				Speakers : '1', 
 				About : '0',
@@ -189,7 +190,7 @@ class Details extends Component {
 		var data = ({
 			'event_id' : id,
 		})
-		axios.post('http://64.225.33.244:8000/event/postGoingCount', data)
+		axios.post(this.state.apiBaseUrl + 'event/postGoingCount', data)
 		.then(response => {
 			let currentEvent = this.state.eventDeatail;
 			currentEvent.going_count = response.data.going_count
@@ -309,8 +310,8 @@ class Details extends Component {
 		var targetArr2 = moreventsinCity.map((evnt) => {return evnt.event_city;}); 
 		
 		let allCitieslen2 = this.state.allCities.length;
-		for(var i = 0 ; i < targetArr2.length ; i++){
-			for(var j = 0 ; j < allCitieslen2 ; j++){
+		for(let i = 0 ; i < targetArr2.length ; i++){
+			for(let j = 0 ; j < allCitieslen2 ; j++){
 				if(targetArr2[i] === this.state.allCities[j].id){
 					eventcity2.push(this.state.allCities[j].name);
 					break;
@@ -343,7 +344,7 @@ class Details extends Component {
 							{moreEvents1}
 						</tbody>
 					</table>		
-		var shareUrl = 'http://192.168.0.117:3000/details/'+event.id;
+		var shareUrl = this.state.baseLink + 'details/'+ event.id;
 		var title = event.event_name;
 		return(
 			<div class="body">
@@ -412,13 +413,10 @@ class Details extends Component {
 						<button class="btn" className="fbtns" onClick={()=>this.ongoingCount(event.id)}>Going</button>
 						<button class="btn" className="fbtns1">Discussion</button>
 						<button class="btn" className="fbtns1" onClick={()=>this.showSocialDiv()}>Share & Invite</button>
-						{/* <button class="btn" className="fbtns1">Save</button> */}
 					</div>
 		        	<div class="col-md-2 interested">
 		        		<label className="fbtns2">Interested <span className="goingCount">{event.going_count}</span> </label>
 		        	</div>
-
-					
 	            </div>
 
 	            <div className="row mainRow">
@@ -476,7 +474,7 @@ class Details extends Component {
 
  	render() {
  		var resultedBody = '';
- 		if(this.state.eventDeatail != '' && this.state.eventTags.length > 0 && this.state.allTags.length > 0 && this.state.relatedEvents.length > 0 && this.state.moreventsinCity.length > 0 ){
+ 		if(this.state.eventDeatail !== '' && this.state.eventTags.length > 0 && this.state.allTags.length > 0 && this.state.relatedEvents.length > 0 && this.state.moreventsinCity.length > 0 ){
  			resultedBody = this.makeBody(this.state.eventDeatail,this.state.eventTags,this.state.relatedEvents,this.state.moreventsinCity);
  		}
     	return (
