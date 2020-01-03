@@ -17,11 +17,13 @@ export default class Home extends Component {
 			tags:[],
 			tagsFltrsEvents : [],
 			checkBoxStatus:[],
-			cityId:'',
-			CategoryId:'',
+			cityId:0,
+			CategoryId:0,
 			search:'',
 			apiBaseUrl : 'http://64.225.33.244:8000/',
-			loading : true
+			baseUrl : 'http://64.225.33.244:3000/',
+			baseLink : 'http://www.nextexibition.com/',
+			loading : true,
 		} 
 		//this.searchEvent = this.searchEvent.bind(this);
 	}
@@ -60,50 +62,88 @@ export default class Home extends Component {
 		this.setState({
 			loading : true
 		})
-		var url = this.state.apiBaseUrl + 'event/allEvents/?event_city='+id;
+
+		let url = this.state.apiBaseUrl + 'event/allEvents/'
+		if(id !== 0){
+			url = this.state.apiBaseUrl + 'event/allEvents/?event_city='+id;
+		}
+
 		let tagslist = this.state.checkBoxStatus;
 		if(tagslist.length > 0){
-			for(var i = 0 ; i < tagslist.length; i++){
-				url = url+'&event_tag=' + tagslist[i];
-	        }
+			if (url.indexOf('?') > -1)
+			{
+				for(let i = 0 ; i < tagslist.length; i++){
+					url = url+'&event_tag=' + tagslist[i];
+				}
+			}else{
+				url = url + '?event_tag=' + tagslist[0];
+				for(let i = 1 ; i < tagslist.length; i++){
+					url = url + '&event_tag=' + tagslist[i];
+				}
+			}
 		}
+
 		let eventCategory = this.state.CategoryId;
-		if(eventCategory !== ''){
-			url = url+'&event_type=' + eventCategory;
+		if(eventCategory !== 0){
+			if (url.indexOf('?') > -1)
+			{
+				url = url+'&event_type=' + eventCategory;
+			}else{
+				url = url+'?event_type=' + eventCategory;
+			}	
 		}
 		
 		axios.get(url)
 		.then(response => {
 			this.setState({
 				events:response.data.results,
-				loading : false
+				loading : false,
+				cityId : id,
 			})
 		})
 		.catch(error =>{
 			console.log(error);
 		})
 	}
+
 	getEventByCategory(id){
 		this.setState({
 			loading : true
 		})
-		var url = this.state.apiBaseUrl + 'event/allEvents/?event_type='+id;
+		let url = this.state.apiBaseUrl + 'event/allEvents/'
+		if(id !== 0){
+			url = this.state.apiBaseUrl + 'event/allEvents/?event_type='+id;
+		}
 		let eventCity=this.state.cityId;
-		if(eventCity !== ''){
-			url=url + '&event_city=' + eventCity;
+		if(eventCity !== 0){
+			if (url.indexOf('?') > -1)
+			{
+				url=url + '&event_city=' + eventCity;
+			}else{
+				url=url + '?event_city=' + eventCity;
+			}
 		}
 		
 		let tagslist = this.state.checkBoxStatus;
 		if(tagslist.length > 0){
-			for(var i=0; i < tagslist.length; i++){
-				url = url + '&event_tag=' + tagslist[i]; 
+			if (url.indexOf('?') > -1)
+			{
+				for(let i = 0 ; i < tagslist.length; i++){
+					url = url+'&event_tag=' + tagslist[i];
+				}
+			}else{
+				url = url + '?event_tag=' + tagslist[0];
+				for(let i = 1 ; i < tagslist.length; i++){
+					url = url + '&event_tag=' + tagslist[i];
+				}
 			}
 		}
 		axios.get(url)
 		.then(response => {
 			this.setState({
 				events:response.data.results,
-				loading : false
+				loading : false,
+				CategoryId : id
 			})
 		})
 		.catch(error =>{
@@ -122,35 +162,41 @@ export default class Home extends Component {
 		}else if(event.target.checked === false){
 			tagslist = tagslist.filter((arrId) => arrId !== id)
 		}
-		this.setState({
-			checkBoxStatus:tagslist,	
-		})
-
 		var url = this.state.apiBaseUrl + 'event/allEvents';
-
-		
 		if(tagslist.length > 0){
 			url = this.state.apiBaseUrl + 'event/allEvents/?event_tag='+tagslist[0];
+			for(var i = 1 ; i < tagslist.length; i++){
+				url = url+'&event_tag=' + tagslist[i];
+			}
 		}
-		for(var i = 1 ; i < tagslist.length; i++){
-			url = url+'&event_tag=' + tagslist[i];
-        }
+		
         
         let eventCity=this.state.cityId;
-        if(eventCity !== ''){
-			url=url + '&event_city=' + eventCity;
+        if(eventCity !== 0){
+			if (url.indexOf('?') > -1)
+			{
+				url=url + '&event_city=' + eventCity;
+			}else{
+				url=url + '?event_city=' + eventCity;
+			}
 		}
 		
 		let eventCategory = this.state.CategoryId;
-		if(eventCategory !== ''){
-			url = url+'&event_type=' + eventCategory;
+		if(eventCategory !== 0){
+			if (url.indexOf('?') > -1)
+			{
+				url = url+'&event_type=' + eventCategory;
+			}else{
+				url = url+'?event_type=' + eventCategory;
+			}
 		}
         axios.get(url)
 		.then((response) => {
 			console.log(response.data.results.length);
 	        this.setState({
 				events : response.data.results,
-				loading : false
+				loading : false,
+				checkBoxStatus:tagslist,
 	        })
 		})
 		.catch(error =>{
@@ -160,11 +206,11 @@ export default class Home extends Component {
 
 	eventsList(event){  		
 		return(
-			<div key={event.id} class="structure col-md-4">
+			<div key={event.id} class="col-md-4">
 				<Link to={{pathname: "/details/"+event.id}}>
 					<div class="card structure">
-		                <img class="card-img-top" className="cardImg" src={event.main_image} alt="ExpoImg" />
-		                <div class="card-body perfumesDetails">
+		                <img class="card-img-top" className="cardImg" src={event.main_image} alt={event.event_name} />
+		                <div class="card-body">
 		                  <b class="card-title t1 primaryColor">  {((event.event_name).length > 30) ? 
 	   						 (((event.event_name).substring(0,33-3)) + '...') : 
 	    					event.event_name } </b>
@@ -179,9 +225,10 @@ export default class Home extends Component {
 	}
 
 	citiesList(cities){
+		const className = this.state.cityId === cities.id ? 'listColorActive' : 'listColor';
 		return(
 				<div key= {cities.id} class="col-md-2">
-					<a className="links" onClick={() => this.getEventByCity(cities.id)}> <span className="listColor">{cities.name}</span></a><br/>
+					<a className="links" onClick={() => this.getEventByCity(cities.id)}> <span className={className}>{cities.name}</span></a><br/>
 				</div>
 			)
 	} 
@@ -198,9 +245,10 @@ export default class Home extends Component {
 	}
 
 	categoriesList(categories){
+		const className = this.state.CategoryId === categories.id ? 'listColorActive' : 'listColor';
 		return(
 				<div key= {categories.id} class="col-md-2">
-					<a className="links" onClick={()=>this.getEventByCategory(categories.id)}><span className="listColor">{categories.name}</span></a><br/>
+					<a className="links" onClick={()=>this.getEventByCategory(categories.id)}><span className={className}>{categories.name}</span></a><br/>
 				</div>
 		)
 	}
@@ -232,22 +280,6 @@ export default class Home extends Component {
 		event.preventDefault();
 	}
 
-	getAllEvents(){
-		this.setState({
-			loading : true
-		})
-		var url = this.state.apiBaseUrl + 'event/allEvents/';
-		axios.get(url)
-		.then(response => {
-			this.setState({
-				events : response.data.results,
-				loading : false
-			})
-		})
-		.catch(error =>{
-			console.log(error);
-		})
-	}
 	render() {
 		var noData = <h1 className='noData'>Sorry No Data</h1>
 		var dataLoader = <Loader
@@ -289,74 +321,64 @@ export default class Home extends Component {
 
         return (
         	<div class="body">
-
 	            <div className="row head1 primaryBackground">		
 	            	<div className="col-md-3"></div>
 	            	<div className="first col-md-6">
-		            	<h3 className="main">Event<span style={{color:'#ffa257'}}>esy</span></h3>
+		            	<h3 className="main">Next<span style={{color:'#ffa257'}}>Exhibition</span></h3>
 		            	<p id="one">Find interesting shows & conferences to attend</p>
-		            	<input type="text" className="sbar primaryColor" value={this.state.search} placeholder="Search by: City, Industry or event name " name="search" onChange={(e)=>this.searchFieldChange(e)} onKeyPress={(e) => { if(e.key === 'Enter'){this.searchEvent(e)}}} />
+		            	<input type="text" className="sbar primaryColor" value={this.state.search} placeholder="Search by : city category or name " name="search" onChange={(e)=>this.searchFieldChange(e)} onKeyPress={(e) => { if(e.key === 'Enter'){this.searchEvent(e)}}} />
 	      				<button className="newBtn" class="button newBtn" onClick={(e)=>this.searchEvent(e)}><span style={{color:'white'}}>Search</span></button>
 	            	</div>
 	            	<div className="col-md-3"></div>
 	            </div>
 
-
-
-
-	            <div className="row featuredRow">
-            		<div class="col-md-2 "></div>
-
-            		<div class="col-md-8">
-		        		<h6>Featured Events <span class="featured">handpicked and popular events to go</span></h6>
-		        	</div>
-		        	<div class="ff col-md-2">
-						
+	            <div className="row featuredRowHome">
+            		<div class="col-md-12 col-sm-12 col-lg-12 featuredData">
+						<h6>Featured Events <span class="featured">handpicked and popular events to go</span></h6>
 					</div>
 				</div>
 
-
-
-
-				<div className="dataRow">
+				<div className="dataRowHome">
 	            	<div className="row">
-			        	<div class="col-md-2">
+			        	<div class="col-md-2 col-sm-12 col-lg-2 ">
 			        		<div className="tagsFilter">
-									<h6 className="headingsAlign">Event Tags</h6>
-								 	{tagsArr}
-								</div>
+								<h6 className="headingsAlign">Filters</h6>
+								{tagsArr}
+							</div>
 			        	</div>
 
-			        	<div class="col-md-8">
+			        	<div class="col-md-8 col-sm-12 col-lg-8">
 			        		<div class="row events">
 								{this.state.loading ? (dataLoader) : (resultedDiv.length > 0 ? resultedDiv : noData) }
 			        		</div>
 			        	</div>
 
-			        	<div class="col-md-2">
-			        			<div className="citiesFilter">
-				        			<h6 className="headingsAlign">Popular cities</h6>
-									<div class="col-md-2">
-										<a className="links" onClick={() => this.getAllEvents()}> <span className="listColor">All</span></a><br/>
-									</div>
-									{citiesArr}
-			        			</div>
-			        			<br/>
-
-			        			<div className="categoryFilter">
-			        				<h6 className="headingsAlign">Event Category</h6>
-									<div class="col-md-2">
-										<a className="links" onClick={() => this.getAllEvents()}> <span className="listColor">All</span></a><br/>
-									</div>
-									{categoriesArr}<br/>	
+			        	<div class="col-md-2 col-sm-12 col-lg-2">
+							<div className="citiesFilter">
+								<h6 className="headingsAlign">Cities</h6>
+								<div class="col-md-2">
+									<a className="links" onClick={() => this.getEventByCity(0)}> <span className="listColor">All</span></a><br/>
 								</div>
+								{citiesArr}
+							</div>
+							<br/>
+
+							<div className="categoryFilter">
+								<h6 className="headingsAlign">Categories</h6>
+								<div class="col-md-2">
+									<a className="links" onClick={() => this.getEventByCategory(0)}> <span className="listColor">All</span></a><br/>
+								</div>
+								{categoriesArr}<br/>	
+							</div>
+							<br/>
+							<div className="addsHome">
+								<h6 className="headingsAlign">Google Adds</h6>
 								<br/>
-								<div className="addsHome">
-									<h6 className="headingsAlign">Google Adds</h6>
-									<br/>
-									<br/>
+								<br/>
+								<div class="col-md-2">
 									<p className="primaryColor">Eventesy-Connecting Oppertunities</p>
 								</div>
+							</div>
 						</div>
 					</div>
 	            </div>

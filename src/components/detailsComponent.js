@@ -20,6 +20,10 @@ import {
 import Grid from '@material-ui/core/Grid';
 import DeleteIcon from '@material-ui/icons/Cancel';
 import { makeStyles } from '@material-ui/core/styles';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import Loader from 'react-loader-spinner';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -47,7 +51,10 @@ class Details extends Component {
 			socialIconClass:'socialIconsDivHide',
 			apiBaseUrl : 'http://64.225.33.244:8000/',
 			baseUrl : 'http://64.225.33.244:3000/',
-			baseLink : 'http://www.nextexibition.com/'
+			baseLink : 'http://www.nextexibition.com/',
+			loading : true,
+			bodyClass : 'show',
+			imageSlider : 'hideImageSlider'
 		}
 	}
 	componentDidMount(){
@@ -93,7 +100,8 @@ class Details extends Component {
 				allTags : tagsDataRes,
 				eventTags : thisEventTags,
 				eventCity : thisEventCity,
-				allCities : cityDataRes
+				allCities : cityDataRes,
+				loading : false
 			})
 			axios.get(this.state.apiBaseUrl + 'event/allEvents?event_type=' + eventDataRes.event_type)
 	        .then(response => {
@@ -116,20 +124,14 @@ class Details extends Component {
 	}	
 
 	getEventDetailsByName(id){
+		this.setState({loading : true})
 		var url = this.state.apiBaseUrl + 'event/allEvents/?id=' + id;
 		axios.get(url)
 		.then(response => {
-			this.setState({eventDeatail : response.data.results[0]});
-		})
-		.catch(error =>{
-			console.log(error);
-		})
-	}
-	getEventDetailsByName2(id){
-		var url = this.state.apiBaseUrl + 'event/allEvents/?id=' + id;
-		axios.get(url)
-		.then(response => {
-			this.setState({eventDeatail : response.data.results[0]});
+			this.setState({
+				eventDeatail : response.data.results[0],
+				loading : false
+			});
 		})
 		.catch(error =>{
 			console.log(error);
@@ -200,14 +202,37 @@ class Details extends Component {
 			console.log(err)
 		});
 	}
+
 	showSocialDiv(){
-		this.setState({socialIconClass : 'socialIconsDivShow'});
+		this.setState({
+			socialIconClass : 'socialIconsDivShow',
+			bodyClass : 'hide'
+		});
 	}
+
 	hideSocialDiv(){
-		this.setState({socialIconClass : 'socialIconsDivHide'});
+		this.setState({
+			socialIconClass : 'socialIconsDivHide',
+			bodyClass : 'show'
+		});
+	}
+
+	showSlider(){
+		this.setState({
+			imageSlider : 'showImageSlider',
+			bodyClass : 'hide'
+		});
+	}
+
+	hideSlider(){
+		if(this.state.imageSlider === 'showImageSlider'){
+			this.setState({
+				imageSlider : 'hideImageSlider',
+				bodyClass : 'show'
+			});
+		}
 	}
 	makeBody(event,eventTags,relatedevents,moreventsinCity){
-
 		var descBody = '';
 		var similarEvents = '';
 		var similarEvents1 = '';
@@ -215,7 +240,7 @@ class Details extends Component {
 		var moreEvents1 = '';
 		var eventcity=[];
 		var eventcity2=[];
-		
+	
 		var abuotbtncls = 'selectionBtn';
 		var revBtnCls = 'selectionBtn';
 		var exibBtnCls = 'selectionBtn';
@@ -228,7 +253,7 @@ class Details extends Component {
 			exibBtnCls = 'selectionBtn';
 			imgsBtnCls = 'selectionBtn';
 			spkrBtnCls = 'selectionBtn';
-			descBody = <p className="primaryColor">
+			descBody = <p className="primaryColor eventData">
 				{event.event_description}
 			</p>;
 		}
@@ -238,7 +263,7 @@ class Details extends Component {
 			exibBtnCls = 'selectionBtn';
 			imgsBtnCls = 'selectionBtn';
 			spkrBtnCls = 'selectionBtn';
-			descBody = <p className="primaryColor">
+			descBody = <p className="primaryColor eventData">
 				Some Reviews
 			</p>;
 		}
@@ -248,7 +273,7 @@ class Details extends Component {
 			exibBtnCls = 'selectionBtn clrBrdr';
 			imgsBtnCls = 'selectionBtn';
 			spkrBtnCls = 'selectionBtn';
-			descBody = <p className="primaryColor">Some Exibitors
+			descBody = <p className="primaryColor eventData">Some Exibitors
 			</p>;
 			
 		}
@@ -259,7 +284,7 @@ class Details extends Component {
 			imgsBtnCls = 'selectionBtn clrBrdr';
 			spkrBtnCls = 'selectionBtn';
 			descBody =  <div className="imagesContainer">
-							{event.additional_images.map((imgObj) => {return <img class="img-responsive extraImgs" src={imgObj.image} alt="img"/>})}
+							{event.additional_images.map((imgObj) => {return <img class="img-responsive extraImgs" src={imgObj.image} alt="img" onClick={()=>this.showSlider()}/>})}
 						</div>;
 			
 		}
@@ -269,7 +294,7 @@ class Details extends Component {
 			exibBtnCls = 'selectionBtn';
 			imgsBtnCls = 'selectionBtn';
 			spkrBtnCls = 'selectionBtn clrBrdr';
-			descBody = <p className="primaryColor">
+			descBody = <p className="primaryColor eventData">
 			Some speakers</p>;
 		}
 		
@@ -292,11 +317,14 @@ class Details extends Component {
 						<td className="primaryColor relatedCategoryEventDate">
 							{frmtd_date}
 						</td>
+						<Link to={{pathname: "/details/"+eventobj
+					        .id}}>
 						<td className="relatedEventsData" onClick={()=>this.getEventDetailsByName(eventobj.id)}>
 							<a className="relatedCategoryEventName"> {eventobj.event_name} </a>
 							<br/>
 							<b className="primaryColor relatedCategoryEventCityname"> {eventcity[index]} </b>
 						</td>
+						</Link>
 					</tr>
 						   
 					)})
@@ -325,11 +353,11 @@ class Details extends Component {
 			return (
 				      <tr>
 					        <td className="primaryColor relatedCityEventDate">
-					        	{frmtd_date2}
+					        	{eventobj.start_date}
 					        </td>
 					        <Link to={{pathname: "/details/"+eventobj
 					        .id}}>
-					        <td className="relatedEventsData" onClick={()=>this.getEventDetailsByName2(eventobj.id)} >
+					        <td className="relatedEventsData" onClick={()=>this.getEventDetailsByName(eventobj.id)} >
 					        	<a className="relatedCityEventName"> {eventobj.event_name}</a>
 					       		<br/>
 					        	<b className="primaryColor relatedCityEventCityname">
@@ -350,7 +378,8 @@ class Details extends Component {
 			<div class="body">
 				<div className={this.state.socialIconClass}>
 					<div className="row">
-						<div className="col-md-2 sol-sm-2 socialIcons">
+					<div className="col-md-1 col-sm-1 socialIcons"></div>
+						<div className="col-md-2 col-sm-2 socialIcons">
 							<FacebookShareButton
 									url={shareUrl}
 									quote={title}>
@@ -359,7 +388,7 @@ class Details extends Component {
 									round />
 							</FacebookShareButton>
 						</div>
-						<div className="col-md-2 sol-sm-2 socialIcons">
+						<div className="col-md-2 col-sm-2 socialIcons">
 							<TwitterShareButton
 									url={shareUrl}
 									quote={title}>
@@ -368,7 +397,7 @@ class Details extends Component {
 									round />
 							</TwitterShareButton>
 						</div>
-						<div className="col-md-2 sol-sm-2 socialIcons">
+						<div className="col-md-2 col-sm-2 socialIcons">
 							<WhatsappShareButton
 									url={shareUrl}
 									quote={title}>
@@ -377,7 +406,7 @@ class Details extends Component {
 									round />
 							</WhatsappShareButton>
 						</div>
-						<div className="col-md-2 sol-sm-2 socialIcons">
+						<div className="col-md-2 col-sm-2 socialIcons">
 							<LinkedinShareButton
 									url={shareUrl}
 									quote={title}>
@@ -386,108 +415,117 @@ class Details extends Component {
 									round />
 							</LinkedinShareButton>
 						</div>
-						<div className="col-md-2 sol-sm-2 socialIcons"></div>
-						<div className="col-md-2 sol-sm-2 socialIcons" onClick={()=>this.hideSocialDiv()}><SvgMaterialIcons/></div>
+						<div className="col-md-1 col-sm-1 socialIcons"></div>
+						<div className="col-md-2 col-sm-2 socialIcons" onClick={()=>this.hideSocialDiv()}><SvgMaterialIcons/></div>
 					</div>
 				</div>
-	            <div className="row head1">
-	            	<div className="col-md-1"></div>
-	            	<div className="col-md-2 headimg">
-	            		<img className="mainImg" src={event.main_image} alt="ExpoImg" />
-	            	</div>
-	            	<div className="col-md-8 headcontent">
-	            		<p className="basetxtColor">
-	            			{eventTags.map((m1) => {return <button className='bodytags'>{m1}</button>})}
-	            		</p>
-		            	<h3 className="basetxtColor">{event.event_name}</h3>
-		            	<p className="basetxtColor">{event.start_date}</p>
-		            	<p className="basetxtColor">{this.state.eventCity}</p>
-	            	</div>
-	            	<div className="col-md-1"></div>
-	            </div>
-
-	            <div className="row featuredRow">
-            		<div class="col-md-2"></div>
-
-            		<div class="col-md-8 booth">
-						<button class="btn" className="fbtns" onClick={()=>this.ongoingCount(event.id)}>Going</button>
-						<button class="btn" className="fbtns1">Discussion</button>
-						<button class="btn" className="fbtns1" onClick={()=>this.showSocialDiv()}>Share & Invite</button>
-					</div>
-		        	<div class="col-md-2 interested">
-		        		<label className="fbtns2">Interested <span className="goingCount">{event.going_count}</span> </label>
-		        	</div>
-	            </div>
-
-	            <div className="row mainRow">
-		        	<div class="col-md-2">
-		        		<div className="beta">
-		        			<h6 className="colHeadings">More events in {this.state.eventCity}</h6>
-		        			{moreEvents}
-							<br/>	
+				<div className={this.state.imageSlider}>
+					<Carousel showArrows={true} showThumbs={false} autoPlay={true} interval={3000} infiniteLoop={true}>
+						{event.additional_images.map((imgObj) => {return <div carouselImage><img className="carouselImage" src={imgObj.image} alt="img"/></div>})}
+					</Carousel>
+				</div>
+				<div className={this.state.bodyClass} onClick={()=>this.hideSlider()}>
+					<div className="row head1">
+						<div className="col-md-2 headimg">
+							<img className="mainImg" src={event.main_image} alt="ExpoImg" onClick={()=>this.showSlider()}/>
 						</div>
-		        	</div>
-		        	
-		        	<div class="col-md-8">
-		        		<div class="row one">
-		        			
-		        			<div class={abuotbtncls}>
-		        				<a className="sbtns" onClick={()=>this.selectContent('about')} >About</a>
-		        			</div>
-		        			<div className={revBtnCls}>
-		        				<a onClick={()=>this.selectContent('reviews')} className="sbtns" >Reviews</a>
-		        			</div>
-		        			<div className={exibBtnCls}>
-		        				<a onClick={()=>this.selectContent('exibitors')} className="sbtns">Exibitors</a>
-		        			</div>
-							<div className={imgsBtnCls}>
-		        				<a onClick={()=>this.selectContent('photos')} className="sbtns" >Photos</a>
-		        			</div>
-		        			<div className={spkrBtnCls}>
-		        				<a onClick={()=>this.selectContent('speakers')} className="sbtns">Speakers</a>
-		        			</div>
-		  				</div>
+						<div className="col-md-8 headcontent">
+							<p className="basetxtColor">
+								{eventTags.map((m1) => {return <button className='bodytags'>{m1}</button>})}
+							</p>
+							<h3 className="basetxtColor">{event.event_name}</h3>
+							<p className="basetxtColor">{event.start_date}</p>
+							<p className="basetxtColor">{this.state.eventCity}</p>
+						</div>
+						<div className="col-md-1"></div>
+					</div>
 
-						<div class="row two">
-							{descBody}
+					<div className="row featuredRow">
+						<div class="col-md-2"></div>
+
+						<div class="col-md-8 booth">
+							<button class="btn" className="fbtns" onClick={()=>this.ongoingCount(event.id)}>Going</button>
+							<button class="btn" className="fbtns1">Discussion</button>
+							<button class="btn" className="fbtns3" onClick={()=>this.showSocialDiv()}>Share & Invite</button>
+						</div>
+						<div class="col-md-2 interested">
+							<label className="fbtns2">Interested <span className="goingCount">{event.going_count}</span> </label>
 						</div>
 					</div>
-					<div class="col-md-2">
-		        			<div className="alpha">
-		        				<h6 className="colHeadings">Related Events</h6>
-			        			{similarEvents1}
+
+					<div className="row mainRow">
+						<div class="col-md-2">
+							<div className="beta">
+								<h6 className="colHeadings">More events in {this.state.eventCity}</h6>
+								{moreEvents}
+								<br/>	
 							</div>
-		        			<br/>
-		        			
+						</div>
+						
+						<div class="col-md-8">
+							<div class="row one">
+								<div class={abuotbtncls}>
+									<a className="sbtns" onClick={()=>this.selectContent('about')} >About</a>
+								</div>
+								<div className={revBtnCls}>
+									<a onClick={()=>this.selectContent('reviews')} className="sbtns" >Reviews</a>
+								</div>
+								<div className={exibBtnCls}>
+									<a onClick={()=>this.selectContent('exibitors')} className="sbtns">Exibitors</a>
+								</div>
+								<div className={imgsBtnCls}>
+									<a onClick={()=>this.selectContent('photos')} className="sbtns" >Photos</a>
+								</div>
+								<div className={spkrBtnCls}>
+									<a onClick={()=>this.selectContent('speakers')} className="sbtns">Speakers</a>
+								</div>
+							</div>
+
+							<div class="row two">
+								{descBody}
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div className="alpha">
+								<h6 className="colHeadings">Related Events</h6>
+								{similarEvents1}
+							</div>
+							<br/>
+							
 							<div className="gamma">
 								<h6 className="colHeadings">Google Adds</h6>
 								<br/>
-								
 								<p className="primaryColor">Eventesy-Connecting Oppertunities</p>
 							</div>
+						</div>
 					</div>
+					<Footer/>
 				</div>
-		        
-		    </div>
+			</div>
 		)
 	}
 
  	render() {
- 		var resultedBody = '';
+		 var resultedBody = '';
+		 var dataLoader = <div className='loaderComponent'>
+			 <Loader
+				type="Oval"
+				color="#ffa257"
+				height={100}
+				width={100}
+				className='loading'
+				timeout={3000} //time in millisecond
+			/>
+		</div>
  		if(this.state.eventDeatail !== '' && this.state.eventTags.length > 0 && this.state.allTags.length > 0 && this.state.relatedEvents.length > 0 && this.state.moreventsinCity.length > 0 ){
  			resultedBody = this.makeBody(this.state.eventDeatail,this.state.eventTags,this.state.relatedEvents,this.state.moreventsinCity);
  		}
     	return (
-
         	<div class='body'>
-        		{resultedBody}
-        		<Footer/>
+        		{this.state.loading ? (dataLoader) : (resultedBody) }
         	</div>	
-
 	    )
-
     }
-    
 }
 
 function SvgMaterialIcons() {

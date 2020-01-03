@@ -1,221 +1,329 @@
+.body{
+	min-height:100vh;
+}
+
+.show{
+	background-color: white;
+	min-height:100vh;
+	opacity: 1;
+}
+
+.hide{
+	min-height:100vh;
+	opacity: 0.2;
+}
 
 .primaryBackground{
-		background-color: #656684;
-	}
-	.seconderyBackground{
-		background-color: #ffa257;
-	}
-	.primaryColor{
-		color: #656684;
-	}
-	.seconderyColor{
-		color: #ffa257;
-	}
-	
-	.basetxtColor{
-		color:white;
-		
-	}
-	.head1{
+	background-color: #656684;
+}
+
+.seconderyBackground{
+	background-color: #ffa257;
+}
+
+.primaryColor{
+	color: #656684;
+}
+
+.seconderyColor{
+	color: #ffa257;
+}
+
+.basetxtColor{
+	color:white;	
+}
+
+.head1{
 	background-color:  #656684;
-	}
-	.mainImg{
- 	height:215px;
- 	width: 215px;
- 	margin-left:0;
-	 margin-right:0; 
-	}
-	.featuredRow{
-		background-color:white;
-		margin-top:0;
-		margin-bottom:10px;
-		
-	}
-	.booth{
-		margin-left:0;
-		padding:0;
-		margin-bottom:1px;
-		margin-top:1px;
-		
-	}
-	.interested{
-		margin-bottom:1px;
-		margin-top:1px;
-		align-items: center;
-	}
-	.sbtns{
-		cursor:pointer;
-		padding-left : 30%;
-		padding-right : 30%;
-	}
-	.headcontent{
-		margin-left:0;
+}
 
-		
-	}
-	.evntDetails{
+.mainImg{
+	height:100%;
+	width: 100%;
+	margin-left:0;
+	margin-right:0;
+}
 
-	}
-	.one{
-		
-		padding:0;
-	}
+.featuredRow{
+	background-color:white;
+	margin-top:0;
+	margin-bottom:10px;
+	margin-left: 0;
+}
 
-	
-	.two{
-		background-color:white;
-		margin-top:15px;
-	}
-	.fbtns{
-		border-color: white;
-		display: inline-block;
-		margin-left:0;
-		background-color:#ffa257;
-		border-radius: 7px;
-		color:white;
-		font-size: 110%;
-		margin-bottom:1%;
-		margin-top:1%;
-		padding: 0.7%;
-		width: 20%;
-	}
-	.fbtns1{
-		padding: 0.7%;
-		border-radius: 7px;
-		border-color: white;
-		display: inline-block;
-		background-color:#ffa257;
-		color:white;
-		font-size: 110%;
-		margin-left:1%;
-		margin-bottom:1%;
-		margin-top:1%;
-		width: 20%;
-	}
-	.fbtns2{
-		padding-top: 2%;
-		padding-bottom: 2%;
-		padding-right: 5%;
-		padding-left: 5%;
-		border-radius: 7px;
-		border-color: white;
-		display: inline-block;
-		background-color:#ffa257;
-		color:white;
-		font-size: 110%;
-		margin-top:7%;
-		width: 70%;
-	}
+.booth{
+	padding:0;
+	margin-bottom:1px;
+	margin-top:1px;
+}
 
-	
-	.selectionBtn{
-		width: 20%;
-		border : 0.1px solid #d3d3d3;
-		background-color: white;
-		color: #656684;
-	}
-	.bodytags{
-		margin-left : 1%;
-		border-radius : 6px;
-		padding:0.5%;
-		background-color : #ffa257;
-		border:#ffa257;
-		color:white;
-	}
-	.extraImgs{
-		width : 50%;
-		padding-left:5%;
-		padding-right : 5%;
-		padding-top : 2%;
-		padding-bottom : 2%;
-		
-	}
-	img.extraImgs{
-		display: inline;
-	}
-	.clrBrdr{
-		border-bottom : 3px solid #ffa257;
-	}
-	.tst{
-		border: 1 px solid red;
-	}
-	.related{
-		border-bottom: 2px solid #ffa257;
+.interested{
+	margin-bottom:1px;
+	margin-top:1px;
+	align-items: center;
+}
 
-	}
-	.alpha{
-		
-		margin-top: 0;
-		text-align: center;
-		margin-bottom: 5%;
+.sbtns{
+	cursor:pointer;
+	padding-left : 30%;
+	padding-right : 30%;
+}
 
-	}
-	.beta{
-		
-		text-align: center;
-		margin-bottom: 5%;
-		margin-left: 10px;
+.headcontent{
+	margin-left:0;
+	padding-top: 3%;
+}
 
-	}
-	.gamma{
-		
-		text-align: center;
-		margin-bottom: 5%;
+.one{
+	padding:0;
+	margin-left: 0;
+}
 
-	}
-	.colHeadings{
-		background-color: white;
-	}
-	.relatedCityEventDate{
-		font-size: 15px;
+.two{
+	background-color:white;
+	margin-top:15px;
+	margin-left: 0;
+}
 
-	}
-	.relatedCityEventName{
-		font-size: 15px;
+.fbtns{
+	border-color: white;
+	display: inline-block;
+	margin-left:0;
+	background-color:#ffa257;
+	border-radius: 7px;
+	color:white;
+	font-size: 110%;
+	margin-bottom:1%;
+	margin-top:1%;
+	padding: 0.7%;
+	width: 20%;
+}
 
-	}
-	.relatedCityEventCityname{
-		font-size: 15px;
+.fbtns1{
+	padding: 0.7%;
+	border-radius: 7px;
+	border-color: white;
+	display: inline-block;
+	background-color:#ffa257;
+	color:white;
+	font-size: 110%;
+	margin-left:1%;
+	margin-bottom:1%;
+	margin-top:1%;
+	width: 20%;
+}
 
-	}
-	.relatedCategoryEventDate{
-		font-size: 15px;
-	}
-	.relatedCategoryEventName{
-		font-size: 15px;
-	}
-	.relatedCategoryEventCityname{
-		font-size: 15px;
-	}
-	.relatedEventsData{
-		cursor: pointer;
-	}
-	.goingCount{
-		background-color: #656684;
-		padding-left: 3%;
-		padding-right: 3%;
-		border-radius: 50%;
-		float: right;
-	}
-	.socialIconsDivShow{
-		width : 30%;
-		height : 10%;
-		margin-left: 35%;
-		margin-top: 17%;
-		border: 5px solid #ffa257;
-		position: fixed;
-		z-index: 2;
-		background-color: white;
-		border-radius: 20px;
-		display: block;
-	}
-	.socialIconsDivHide{
-		display: none;
-	}
-	.socialIcons{
-		padding-top: 2%;
-		padding-left: 5%;
-	}
-	.cross:hover{
-		cursor: pointer;
-	}
+.fbtns3{
+	padding: 0.7%;
+	border-radius: 7px;
+	border-color: white;
+	display: inline-block;
+	background-color:#ffa257;
+	color:white;
+	font-size: 110%;
+	margin-left:1%;
+	margin-bottom:1%;
+	margin-top:1%;
+	width: 25%;
+}
+
+.fbtns2{
+	padding-top: 2%;
+	padding-bottom: 2%;
+	padding-right: 5%;
+	padding-left: 5%;
+	border-radius: 7px;
+	border-color: white;
+	display: inline-block;
+	background-color:#ffa257;
+	color:white;
+	font-size: 110%;
+	margin-top:7%;
+	width: 70%;
+}
+
+.selectionBtn{
+	width: 20%;
+	border : 0.1px solid #d3d3d3;
+	background-color: white;
+	color: #656684;
+}
+
+.bodytags{
+	margin-right: 1%;
+	border-radius : 6px;
+	padding:0.5%;
+	background-color : #ffa257;
+	border:#ffa257;
+	color:white;
+}
+
+.extraImgs{
+	width : 50%;
+	padding-left:5%;
+	padding-right : 5%;
+	padding-top : 2%;
+	padding-bottom : 2%;
+}
+
+img.extraImgs{
+	display: inline;
+}
+
+.clrBrdr{
+	border-bottom : 3px solid #ffa257;
+}
+
+.tst{
+	border: 1 px solid red;
+}
+
+.related{
+	border-bottom: 2px solid #ffa257;
+
+}
+
+.alpha{	
+	margin-top: 0;
+	text-align: center;
+	height: auto;
+	padding-bottom: 5%;
+	margin-right: 3%;
+	margin-left: 3%;
+	border-bottom:2px solid #656684;
+}
+
+.beta{
+	margin-top: 0;
+	text-align: center;
+	height: auto;
+	padding-bottom: 5%;
+	margin-left:3%;
+	margin-right:3%;
+	width : 94%;
+	border-bottom:2px solid #656684;
+}
+
+.gamma{
+	margin-top: 0;
+	text-align: center;
+	height: auto;
+	border-bottom:2px solid #656684;
+	padding-bottom: 5%;
+	margin-right: 3%;
+	margin-left: 3%;
+	margin-bottom: 10%;
+}
+
+.colHeadings{
+	text-align: center;
+	background-color: white;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	color: #ffa257;
+}
+
+.relatedCityEventDate{
+	font-size: 15px;
+}
+
+.relatedCityEventName{
+	font-size: 15px;
+
+}
+
+.relatedCityEventCityname{
+	font-size: 15px;
+
+}
+
+.relatedCategoryEventDate{
+	font-size: 15px;
+}
+
+.relatedCategoryEventName{
+	font-size: 15px;
+}
+
+.relatedCategoryEventCityname{
+	font-size: 15px;
+}
+
+.relatedEventsData{
+	cursor: pointer;
+}
+
+.goingCount{
+	background-color: #656684;
+	padding-left: 3%;
+	padding-right: 3%;
+	border-radius: 20px;
+	float: right;
+}
+
+.socialIconsDivShow{
+	width : 30%;
+	height : 10%;
+	margin-left: 32%;
+	margin-top: 20%;
+	border: 5px solid #ffa257;
+	position: fixed;
+	z-index: 2;
+	background-color: white;
+	border-radius: 20px;
+	display: block;
+}
+
+.socialIconsDivHide{
+	display: none;
+}
+
+.socialIcons{
+	padding-top: 2%;
+	padding-left: 0;
+}
+
+.cross:hover{
+	cursor: pointer;
+}
+
+.loading{
+	text-align: center;
+	color:#ffa257;
+	padding-top: 20%;
+}
+
+.loaderComponent{
+	text-align: center;
+	height:100vh;
+	min-height:100vh;
+}
+
+.eventData{
+	padding : 3%;
+}
+
+.showImageSlider{
+	width : 70%;
+	height : 80%;
+	margin-left: 15%;
+	margin-top: 5%;
+	border: 5px solid #ffa257;
+	position: fixed;
+	z-index: 2;
+	background-color: white;
+	display: block;
+}
+
+.hideImageSlider{
+	display: none;
+}
+
+.carouselImage{
+	height : 76vh;
+}
+
+.sliderClosebtn{
+	background-color: #ffa257;
+	color: #656684;
+}

@@ -19,7 +19,7 @@ export default class Footer extends Component{
 	            		all major cities of Pakistan, simultaneously establishing a network of partners in China, Turkey, 
 	            		South Korea, U.K., Malaysia, U.A.E., Central Asian Republics, Middle East, India and Far East.
 	            		</p>
-	            		<SocialIcon network="facebook" url="https://www.facebook.com/nextexhibition" fgColor="white" bgColor="#ffa257" target="_blank"/>
+	            		<SocialIcon network="facebook" url="https://www.facebook.com/nextexhibition" fgColor="white" bgColor="#ffa257" target="_blank" />
 	            		<SocialIcon network="linkedin" url="https://www.linkedin.com/company/31067869/" fgColor="white" bgColor="#ffa257" className="s_icons" target="_blank"/>
 	            		<SocialIcon network="twitter" url="https://www.linkedin.com/company/31067869/" fgColor="white" bgColor="#ffa257" className="s_icons" target="_blank"/>
 	            	</div>
