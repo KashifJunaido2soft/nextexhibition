@@ -7,51 +7,40 @@ export default class Footer extends Component{
   }
 	render(){
 		return(
-			<div className="row primaryBackground footerMainDiv">	
-		        	<div className="col-md-1"></div>
-	            	
-	            	<div className="col-md-4">
-	            		<h6>About Us</h6>
-	            		<p className="tinyTxt">
-	            		NextExhibition.com is an Exhibitions Owner, Trade Fair, Trade Shows Exhibition Organizer, 
-	            		Event Management Company with strategic partners and major operations in Pakistan. 
-	            		Since its inception in 2018, NextExhibition.com has, through a two-prong strategy, extended its reach to cover 
-	            		all major cities of Pakistan, simultaneously establishing a network of partners in China, Turkey, 
-	            		South Korea, U.K., Malaysia, U.A.E., Central Asian Republics, Middle East, India and Far East.
-	            		</p>
-	            		<SocialIcon network="facebook" url="https://www.facebook.com/nextexhibition" fgColor="white" bgColor="#ffa257" target="_blank" />
-	            		<SocialIcon network="linkedin" url="https://www.linkedin.com/company/31067869/" fgColor="white" bgColor="#ffa257" className="s_icons" target="_blank"/>
-	            		<SocialIcon network="twitter" url="https://www.linkedin.com/company/31067869/" fgColor="white" bgColor="#ffa257" className="s_icons" target="_blank"/>
-	            	</div>
-
-	            	<div className="col-md-4">
-		            	<h6>Contact Us</h6>
-		            	<h8>Email:</h8>
-		            	<p className="tinyTxt inlineDisplay" > info@nextexhibition.com</p>
-		            	<br/>	
-		            	<h8>Telephone: </h8>
-		            	<p className="tinyTxt inlineDisplay">(+92) 345 416 5259</p>
-	            		<br/>	
-		            	<h8>Address: </h8>
-		            	<p className="tinyTxt inlineDisplay">NextExhibition (Pvt) Ltd, Office # 10, Ground Floor Al-Hafeez Suites 69-B2 M M Alam Road Gulberg III, Lahore, Pakistan</p>
-		            	<br/>
-		            </div>
-
-	            	<div className="col-md-2"> 
-	            		<h6>Quick Links</h6>
-	            		<a href="/" className="main2">Services</a>
-	            		<a href="/" className="main2">Feedback</a>
-	            		<a href="/" className="main2">Career(join us)</a>
-	            		<a href="/" className="main2">List your Event</a>
-	            		<a href="/" className="main2">Event Marketing</a>
-	            		<a href="/" className="main2">Help Center(FAQ)</a>
-	            	</div>
-	            	<div className="col-md-1"></div>
-	            </div>
-			
-		
-
-
-			)
+			<div className="row primaryBackground footerMainDiv">
+				<div className="row footerData1">
+					<div className="col-md-1"></div>
+					
+					<div className="col-md-4">
+						<h6>About Us</h6>
+						<p className="tinyTxt">
+						NextExibition.com is a platform for getting in touch of all the buzzing events around you.To meet to right opportunities you need to be at right place at right time with right information and meeting right people. Events are the perfect example and provide perfect platform for connecting with right opportunities. Our vast community of event goers share their reviews and photos, so you have all that you need to make an informed choice.
+						</p>
+					</div>
+					<div className="col-md-1"></div>
+					<div className="col-md-3">
+						<h6>Contact Us</h6>
+						<h8>Email:</h8>
+						<p className="tinyTxt inlineDisplay" > nextexibition@gmail.com</p>
+						<br/>
+					</div>
+					<div className="col-md-3">
+						<h6>Social Links</h6>
+						<SocialIcon network="facebook" url="https://www.facebook.com/NextExibition-107305510797064/" fgColor="#ffa257" bgColor="white" target="_blank" />
+						<SocialIcon network="linkedin" url="https://www.linkedin.com/company/31067869/" fgColor="#ffa257" bgColor="white" className="s_icons" target="_blank"/>
+						<SocialIcon network="twitter" url="https://twitter.com/nextexibition" fgColor="#ffa257" bgColor="white" className="s_icons" target="_blank"/>
+					</div>
+				</div>
+				<br/>
+				<div className="row footerData2">
+					<div class="col-md-1"></div>
+					<div class="col-md-10">
+						<span className="tinyTxt1 inlineDisplay">By continuing to this page, you agree to our Terms of Service, Privacy Policy and Content Policies. All trademarks are properties of their respective owners.
+						© 2020 - NextExibition Online Private Limited. All rights reserved.</span>
+					</div>
+					<div class="col-md-1"></div>
+				</div>
+			</div>
+		)
 	}
 }

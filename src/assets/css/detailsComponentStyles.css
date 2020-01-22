@@ -1,16 +1,38 @@
 .body{
 	min-height:100vh;
+	margin : 0;
+	left: 0;
+	right: 0;
+	width: 100%;
 }
 
 .show{
 	background-color: white;
 	min-height:100vh;
 	opacity: 1;
+	margin : 0;
+	left: 0;
+	right: 0;
+	width: 100%;
 }
 
 .hide{
-	min-height:100vh;
 	opacity: 0.2;
+	min-height:100vh;
+	margin : 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+}
+
+.mainRow{
+	background-color: #F5F5F5;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	margin : 0;
+	left: 0;
+	right: 0;
+	width: 100%;
 }
 
 .primaryBackground{
@@ -34,7 +56,38 @@
 }
 
 .head1{
-	background-color:  #656684;
+	height: 100%;
+	min-height: 38vh;
+	position: relative;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	padding-left: 2%;
+	background-color: black;
+	opacity: 0.9;
+	margin : 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+}
+
+.head1::after{
+	height: 100%;
+	min-height: 38vh;
+	position: absolute;
+	background: url("../images/back1.jfif");
+	opacity: 0.3;
+	padding : 2%;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	content: "";
+	z-index: -1;
+	min-height: 20%;
+	margin : 0;
+	left: 0;
+	right: 0;
+	width: 100%;
 }
 
 .mainImg{
@@ -42,6 +95,7 @@
 	width: 100%;
 	margin-left:0;
 	margin-right:0;
+	border: 1px solid #ffa257;
 }
 
 .featuredRow{
@@ -49,6 +103,10 @@
 	margin-top:0;
 	margin-bottom:10px;
 	margin-left: 0;
+	margin : 0;
+	left: 0;
+	right: 0;
+	width: 100%;
 }
 
 .booth{
@@ -74,15 +132,24 @@
 	padding-top: 3%;
 }
 
-.one{
+.typeHeadings{
 	padding:0;
 	margin-left: 0;
 }
 
-.two{
+.typeDetails{
 	background-color:white;
 	margin-top:15px;
 	margin-left: 0;
+}
+
+.homeBtn{
+	padding: 0.7%;
+	display: inline-block;
+	margin-left:40%;
+	margin-bottom:1%;
+	margin-top:4%;
+	width: 20%
 }
 
 .fbtns{
@@ -151,8 +218,11 @@
 
 .bodytags{
 	margin-right: 1%;
-	border-radius : 6px;
-	padding:0.5%;
+	border-radius : 3px;
+	padding-left:1%;
+	padding-right: 1%;
+	font-size: 0.9rem;
+	font-weight: bold;
 	background-color : #ffa257;
 	border:#ffa257;
 	color:white;
@@ -183,36 +253,47 @@ img.extraImgs{
 
 }
 
-.alpha{	
+.cityEvents{
 	margin-top: 0;
 	text-align: center;
 	height: auto;
+	padding-top: 5%;
 	padding-bottom: 5%;
-	margin-right: 3%;
-	margin-left: 3%;
-	border-bottom:2px solid #656684;
+	padding-left: 1%;
+	padding-right: 1%;
+	margin-left: 10%;
+	margin-right:2%;
+	border : 1px solid white;
+	background-color: white;
 }
 
-.beta{
+.relatedEvents{	
 	margin-top: 0;
 	text-align: center;
 	height: auto;
+	padding-top: 5%;
 	padding-bottom: 5%;
-	margin-left:3%;
-	margin-right:3%;
-	width : 94%;
-	border-bottom:2px solid #656684;
+	padding-left: 1%;
+	padding-right: 1%;
+	margin-right: 10%;
+	margin-left: 2%;
+	border : 1px solid white;
+	background-color: white;
 }
 
-.gamma{
+.ads{
 	margin-top: 0;
 	text-align: center;
 	height: auto;
-	border-bottom:2px solid #656684;
+	padding-top: 5%;
 	padding-bottom: 5%;
-	margin-right: 3%;
-	margin-left: 3%;
+	padding-left: 1%;
+	padding-right: 1%;
+	margin-right: 10%;
+	margin-left: 2%;
 	margin-bottom: 10%;
+	border : 1px solid white;
+	background-color: white;
 }
 
 .colHeadings{
@@ -223,30 +304,14 @@ img.extraImgs{
 	color: #ffa257;
 }
 
-.relatedCityEventDate{
-	font-size: 15px;
+.eventDate{
+	font-size: 0.9rem;
+	width : 40%
 }
 
-.relatedCityEventName{
-	font-size: 15px;
-
-}
-
-.relatedCityEventCityname{
-	font-size: 15px;
-
-}
-
-.relatedCategoryEventDate{
-	font-size: 15px;
-}
-
-.relatedCategoryEventName{
-	font-size: 15px;
-}
-
-.relatedCategoryEventCityname{
-	font-size: 15px;
+.eventName{
+	font-size: 0.9rem;
+	width : 60%
 }
 
 .relatedEventsData{
@@ -263,15 +328,15 @@ img.extraImgs{
 
 .socialIconsDivShow{
 	width : 30%;
-	height : 10%;
+	height : auto;
 	margin-left: 32%;
-	margin-top: 20%;
-	border: 5px solid #ffa257;
+	margin-top: 10%;
+	border: 2px solid #ffa257;
 	position: fixed;
 	z-index: 2;
 	background-color: white;
-	border-radius: 20px;
 	display: block;
+	padding-bottom: 2%;
 }
 
 .socialIconsDivHide{
@@ -279,8 +344,14 @@ img.extraImgs{
 }
 
 .socialIcons{
-	padding-top: 2%;
-	padding-left: 0;
+	padding-top: 1%;
+	padding-left: 1%;
+}
+
+.inviteText{
+	text-align: center;
+	padding : 5%;
+	font-size: 1.3rem;
 }
 
 .cross:hover{
@@ -290,7 +361,7 @@ img.extraImgs{
 .loading{
 	text-align: center;
 	color:#ffa257;
-	padding-top: 20%;
+	padding-top: 5%;
 }
 
 .loaderComponent{
@@ -326,4 +397,87 @@ img.extraImgs{
 .sliderClosebtn{
 	background-color: #ffa257;
 	color: #656684;
+}
+
+.disabledClick{
+	pointer-events: none;
+}
+
+.enabledClick{
+	pointer-events: all;
+}
+
+@media screen and (max-width: 1130px) {
+	.homeBtn{
+		width : 30%
+	}
+	.fbtns2{
+		margin-top: 5%;
+	}
+}
+
+@media screen and (max-width: 770px) {
+	.head1{
+		padding-left: 5%;
+		padding-right: 3%;
+	}
+	.socialIconsDivShow{
+		padding-left: 5%;
+		width : 70%;
+		height : 80%;
+		margin-left: 15%;
+		margin-top: 5%;
+		border: 2px solid #ffa257;
+		position: fixed;
+		z-index: 2;
+		background-color: white;
+		display: block;
+		padding-bottom: 2%;
+	}
+	.socialIcons{
+		padding-top: 1%;
+		padding-left: 40%;
+	}
+	.featuredRow{
+		padding-left: 4%;
+	}
+	.interested{
+		padding-left: 0;
+	}
+	.cityEvents{
+		margin-left: 1%;
+		margin-right: 1%;
+	}
+	.mainData{
+		margin-top: 2%;
+		margin-left: 1%;
+		margin-right: 4%;
+	}
+	.relatedEvents{
+		margin-top: 2%;
+		margin-left: 1%;
+		margin-right: 1%;
+	}
+	.ads{
+		margin-left: 1%;
+		margin-right: 1%;
+	}
+	.homeBtn{
+		width: 20%;
+		margin-left: 40%;
+		height: 70%;
+	}
+	.fbtns{
+		width: 27%;
+	}
+	.fbtns1{
+		width: 27%;
+	}
+	.fbtns3{
+		width: 40%;
+	}
+	.fbtns2{
+		margin-top: 0;
+		width: 99%;
+	}
 }

@@ -19,6 +19,10 @@ import {
 
 import Grid from '@material-ui/core/Grid';
 import DeleteIcon from '@material-ui/icons/Cancel';
+import ClockIcon from '@material-ui/icons/AccessTime';
+import Location from '@material-ui/icons/LocationCity';
+import PinPoint from '@material-ui/icons/PinDrop';
+import Home from '@material-ui/icons/Home';
 import { makeStyles } from '@material-ui/core/styles';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from 'react-loader-spinner';
@@ -27,8 +31,9 @@ import { Carousel } from 'react-responsive-carousel';
 
 const useStyles = makeStyles(theme => ({
 	root: {
-		color: theme.palette.text.primary,
-	},
+		color: '#ffffff',
+		height: 48,
+	  },
 }));
 
 class Details extends Component {
@@ -54,10 +59,18 @@ class Details extends Component {
 			baseLink : 'http://www.nextexibition.com/',
 			loading : true,
 			bodyClass : 'show',
-			imageSlider : 'hideImageSlider'
+			imageSlider : 'hideImageSlider',
+			clickableStatus : 'col-md-8 booth disabledClick',
+			homeBtnClassStatus : 'col-md-2 booth disabledClick',
 		}
 	}
 	componentDidMount(){
+		window.scrollTo(0, 0);
+		window.scroll({
+			top: 0,
+			left: 0,
+			behavior: 'smooth',
+		});
 		const id = this.props.match.params.id;
 		let eventUrl = this.state.apiBaseUrl + 'event/allEvents/?id='+id;
 		let cityUrl = this.state.apiBaseUrl + "event/allCities/";
@@ -101,7 +114,9 @@ class Details extends Component {
 				eventTags : thisEventTags,
 				eventCity : thisEventCity,
 				allCities : cityDataRes,
-				loading : false
+				loading : false,
+				clickableStatus : 'col-md-8 booth enabledClick',
+				homeBtnClassStatus : 'col-md-2 booth enabledClick',
 			})
 			axios.get(this.state.apiBaseUrl + 'event/allEvents?event_type=' + eventDataRes.event_type)
 	        .then(response => {
@@ -124,14 +139,65 @@ class Details extends Component {
 	}	
 
 	getEventDetailsByName(id){
+		window.scrollTo(0, 0);
+		window.scroll({
+			top: 0,
+			left: 0,
+			behavior: 'smooth',
+		});
 		this.setState({loading : true})
-		var url = this.state.apiBaseUrl + 'event/allEvents/?id=' + id;
+		let url = this.state.apiBaseUrl + 'event/allEvents/?id=' + id;
 		axios.get(url)
 		.then(response => {
+			const cityDataRes = this.state.allCities;
+			const tagsDataRes = this.state.allTags;
+			const eventDataRes = response.data.results[0];
+
+			let totalTagslen = tagsDataRes.length;
+			let eventTagslen = eventDataRes.event_tag.length;
+			let allCitieslen = cityDataRes.length;
+			let thisEventCity = this.state.eventCity;
+			let oldCityid = this.state.eventDeatail.event_city;
+			if(eventDataRes.event_city !== oldCityid){
+				for(let i = 0; i < allCitieslen; i++){
+					let target = eventDataRes.event_city;
+					if(target === cityDataRes[i].id){
+						thisEventCity = cityDataRes[i].name
+						break;
+					}
+				}
+			}
+			var thisEventTags=[];
+			for(let i = 0 ; i < eventTagslen ; i++){
+				for(let j = 0 ; j < totalTagslen ; j++){
+					if(eventDataRes.event_tag[i] === tagsDataRes[j].id){
+						thisEventTags.push(tagsDataRes[j].name);
+						break;
+					}
+				}
+			}
 			this.setState({
-				eventDeatail : response.data.results[0],
+				eventDeatail : eventDataRes,
+				eventTags : thisEventTags,
+				eventCity : thisEventCity,
 				loading : false
-			});
+			})
+			axios.get(this.state.apiBaseUrl + 'event/allEvents?event_type=' + eventDataRes.event_type)
+	        .then(response => {
+	            this.setState({relatedEvents : response.data.results});
+	        })
+	        .catch(function (error){
+	            console.log(error);
+	        })
+			if(eventDataRes.event_city !== oldCityid){
+				axios.get(this.state.apiBaseUrl + 'event/allEvents?event_city=' + eventDataRes.event_city)
+				.then(response => {
+					this.setState({moreventsinCity : response.data.results});
+				})
+				.catch(function (error){
+					console.log(error);
+				})
+			}
 		})
 		.catch(error =>{
 			console.log(error);
@@ -232,14 +298,51 @@ class Details extends Component {
 			});
 		}
 	}
-	makeBody(event,eventTags,relatedevents,moreventsinCity){
+
+	makeHeader(event, eventTags){
+		let month_names =["Jan","Feb","Mar",
+		"Apr","May","Jun",
+		"Jul","Aug","Sep",
+		"Oct","Nov","Dec"];
+		let dateArr = event.start_date.split("-");
+		let year = dateArr[0];
+		let month = month_names[parseInt(dateArr[1])-1];
+		let day = dateArr[2];
+
+		let endDateArr = event.end_date.split("-");
+		let endingYear = endDateArr[0];
+		let endingMonth = month_names[parseInt(endDateArr[1])-1];
+		let endingDay = endDateArr[2];
+		return(
+			<div className="row">
+				<div className="col-md-2 headimg">
+					<img className="mainImg" src={event.main_image} alt="ExpoImg" onClick={()=>this.showSlider()}/>
+				</div>
+				<div className="col-md-8 headcontent">
+					<p className="basetxtColor">
+						{eventTags.map((m1) => {return <span className='bodytags'>{m1}</span>})}
+					</p>
+					<h3 className="basetxtColor">{event.event_name}</h3>
+					<div className="row">
+						<div className="col-md-1"><SvgClockIcon/></div>
+		<div className="col-md-6"><p className="basetxtColor">{month+" "+day+" "+year} - {endingMonth+" "+endingDay+" "+endingYear}</p></div>
+					</div>
+					<div className="row">
+						<div className="col-md-1"><LocationIcon/></div>
+						<div className="col-md-6"><p className="basetxtColor">{event.event_address}</p></div>
+					</div>
+				</div>
+				<div className="col-md-1"></div>
+			</div>
+		)
+	}
+
+	makeBody(event){
 		var descBody = '';
 		var similarEvents = '';
 		var similarEvents1 = '';
 		var moreEvents = '';
 		var moreEvents1 = '';
-		var eventcity=[];
-		var eventcity2=[];
 	
 		var abuotbtncls = 'selectionBtn';
 		var revBtnCls = 'selectionBtn';
@@ -297,88 +400,154 @@ class Details extends Component {
 			descBody = <p className="primaryColor eventData">
 			Some speakers</p>;
 		}
-		
-		var targetArr = relatedevents.map((evnt) => {return evnt.event_city;}); 
-		
-		let allCitieslen = this.state.allCities.length;
-		for(var i = 0 ; i < targetArr.length ; i++){
-			for(var j = 0 ; j < allCitieslen ; j++){
-				if(targetArr[i] === this.state.allCities[j].id){
-					eventcity.push(this.state.allCities[j].name);
-					break;
-				}
-			}
-		}
-		similarEvents = relatedevents.map((eventobj, index) => {
-			var strtDate = new Date(eventobj.start_date);
-			var frmtd_date =  strtDate.toDateString();
-			return ( 
+		return(
+			<div>
+				<div class="row typeHeadings">
+					<div class={abuotbtncls}>
+						<a className="sbtns" onClick={()=>this.selectContent('about')} >About</a>
+					</div>
+					<div className={revBtnCls}>
+						<a onClick={()=>this.selectContent('reviews')} className="sbtns" >Reviews</a>
+					</div>
+					<div className={exibBtnCls}>
+						<a onClick={()=>this.selectContent('exibitors')} className="sbtns">Exibitors</a>
+					</div>
+					<div className={imgsBtnCls}>
+						<a onClick={()=>this.selectContent('photos')} className="sbtns" >Photos</a>
+					</div>
+					<div className={spkrBtnCls}>
+						<a onClick={()=>this.selectContent('speakers')} className="sbtns">Speakers</a>
+					</div>
+				</div>
+
+				<div class="row typeDetails">
+					{descBody}
+				</div>
+			</div>
+		)
+	}
+
+	moreEventsInThisCity(moreventsinCity){
+		var moreEvents = '';
+		moreEvents = moreventsinCity.map((eventobj, index) => { 
+			let month_names =["Jan","Feb","Mar",
+			"Apr","May","Jun",
+			"Jul","Aug","Sep",
+			"Oct","Nov","Dec"];
+			let dateArr = eventobj.start_date.split("-");
+			let year = dateArr[0];
+			let month = month_names[1];
+			let day = dateArr[2];
+			if(index < 5){
+				return (
 					<tr>
-						<td className="primaryColor relatedCategoryEventDate">
-							{frmtd_date}
-						</td>
 						<Link to={{pathname: "/details/"+eventobj
-					        .id}}>
-						<td className="relatedEventsData" onClick={()=>this.getEventDetailsByName(eventobj.id)}>
-							<a className="relatedCategoryEventName"> {eventobj.event_name} </a>
+						.id}}>
+						<td className="primaryColor eventDate">
+							{month+" "+day+" "+year}
+						</td>
+						<td onClick={()=>this.getEventDetailsByName(eventobj.id)} >
+							<span className="eventName">{eventobj.event_name}</span>
 							<br/>
-							<b className="primaryColor relatedCategoryEventCityname"> {eventcity[index]} </b>
+							<b className="primaryColor">{this.state.eventCity}</b>
 						</td>
 						</Link>
 					</tr>
-						   
-					)})
-
-		similarEvents1 = <table class="table table-striped">
-							<tbody>
-								{similarEvents}
-							</tbody>
-						</table>
-
-		var targetArr2 = moreventsinCity.map((evnt) => {return evnt.event_city;}); 
-		
-		let allCitieslen2 = this.state.allCities.length;
-		for(let i = 0 ; i < targetArr2.length ; i++){
-			for(let j = 0 ; j < allCitieslen2 ; j++){
-				if(targetArr2[i] === this.state.allCities[j].id){
-					eventcity2.push(this.state.allCities[j].name);
-					break;
-				}
+				)
 			}
-		}
-
-		moreEvents1 = moreventsinCity.map((eventobj, index) => { 
-			var strtDate2 = new Date(eventobj.start_date);
-			var frmtd_date2 =  strtDate2.toDateString();
-			return (
-				      <tr>
-					        <td className="primaryColor relatedCityEventDate">
-					        	{eventobj.start_date}
-					        </td>
-					        <Link to={{pathname: "/details/"+eventobj
-					        .id}}>
-					        <td className="relatedEventsData" onClick={()=>this.getEventDetailsByName(eventobj.id)} >
-					        	<a className="relatedCityEventName"> {eventobj.event_name}</a>
-					       		<br/>
-					        	<b className="primaryColor relatedCityEventCityname">
-					        		{eventcity2[index]}</b>
-					        </td>
-					        </Link>
-					    </tr>
-					)})
-		
-		moreEvents = <table class="table table-striped">
-						<tbody>
-							{moreEvents1}
-						</tbody>
-					</table>		
-		var shareUrl = this.state.baseLink + 'details/'+ event.id;
-		var title = event.event_name;
+		})
 		return(
+			<table class="table table-striped">
+				<tbody>
+					{moreEvents}
+				</tbody>
+			</table>	
+		)
+	}
+
+	moreRelatedEvents(relatedevents){
+		var similarEvents = '';
+		similarEvents = relatedevents.map((eventobj, index) => {
+			let month_names =["Jan","Feb","Mar",
+			"Apr","May","Jun",
+			"Jul","Aug","Sep",
+			"Oct","Nov","Dec"];
+			let dateArr = eventobj.start_date.split("-");
+			let year = dateArr[0];
+			let month = month_names[1];
+			let day = dateArr[2];
+			if(index < 5){
+				return ( 
+					<tr>
+						<Link to={{pathname: "/details/"+eventobj
+							.id}}>
+						<td className="primaryColor eventDate">
+							{month+" "+day+" "+year}
+						</td>
+						<td onClick={()=>this.getEventDetailsByName(eventobj.id)}>
+							<span className="eventName">{eventobj.event_name}</span>
+							<br/>
+							<b className="primaryColor">{this.state.allCities.map((evnt) => {if(eventobj.event_city == evnt.id){return evnt.name}})}</b>
+						</td>
+						</Link>
+					</tr>
+				)
+			}
+		})
+		return(
+			<table class="table table-striped">
+				<tbody>
+					{similarEvents}
+				</tbody>
+			</table>	
+		)
+	}
+
+ 	render() {
+		 var resultedBody = '';
+		 var detailHeader = '';
+		 var dataLoader = <div className='loaderComponent'>
+			 <Loader
+				type="Oval"
+				color="#ffa257"
+				height={100}
+				width={100}
+				className='loading'
+				timeout={3000} //time in millisecond
+			/>
+		</div>
+		var shareUrl = "";
+		var title = "";
+		var sliderCarousel = "";
+ 		if(this.state.eventDeatail !== ''  && this.state.eventTags.length > 0){
+			shareUrl = this.state.baseLink + 'details/'+ this.state.eventDeatail.id;
+			title = <a href={shareUrl} target="_blank">{this.state.eventDeatail.event_name}</a>
+			resultedBody = this.makeBody(this.state.eventDeatail);
+			sliderCarousel = <div className={this.state.imageSlider}>
+				<Carousel showArrows={true} showThumbs={false} autoPlay={true} interval={3000} infiniteLoop={true}>
+					<div carouselImage><img className="carouselImage" src={this.state.eventDeatail.main_image} alt="img"/></div>
+					{this.state.eventDeatail.additional_images.map((imgObj) => {return <div carouselImage><img className="carouselImage" src={imgObj.image} alt="img"/></div>})}
+				</Carousel>
+			</div>
+			detailHeader = this.makeHeader(this.state.eventDeatail,this.state.eventTags);
+		}
+		var eventsInCity = [];
+    	if(this.state.moreventsinCity.length > 0){
+			eventsInCity.push(this.moreEventsInThisCity(this.state.moreventsinCity))
+		}
+		var relatedEvents = [];
+    	if(this.state.relatedEvents.length > 0 > 0){
+			relatedEvents.push(this.moreRelatedEvents(this.state.relatedEvents))
+    	}
+    	return (
 			<div class="body">
 				<div className={this.state.socialIconClass}>
+					<div className="inviteText">Events are better when your friends are there too.
+						So, who's coming with you?<br/><br/>
+						Invite via
+					</div>
 					<div className="row">
-					<div className="col-md-1 col-sm-1 socialIcons"></div>
+						<div className="col-md-1 col-sm-1 socialIcons"></div>
 						<div className="col-md-2 col-sm-2 socialIcons">
 							<FacebookShareButton
 									url={shareUrl}
@@ -419,124 +588,114 @@ class Details extends Component {
 						<div className="col-md-2 col-sm-2 socialIcons" onClick={()=>this.hideSocialDiv()}><SvgMaterialIcons/></div>
 					</div>
 				</div>
-				<div className={this.state.imageSlider}>
-					<Carousel showArrows={true} showThumbs={false} autoPlay={true} interval={3000} infiniteLoop={true}>
-						{event.additional_images.map((imgObj) => {return <div carouselImage><img className="carouselImage" src={imgObj.image} alt="img"/></div>})}
-					</Carousel>
-				</div>
-				<div className={this.state.bodyClass} onClick={()=>this.hideSlider()}>
+					{sliderCarousel}
+				<div class={this.state.bodyClass} onClick={()=>this.hideSlider()}>
 					<div className="row head1">
-						<div className="col-md-2 headimg">
-							<img className="mainImg" src={event.main_image} alt="ExpoImg" onClick={()=>this.showSlider()}/>
-						</div>
-						<div className="col-md-8 headcontent">
-							<p className="basetxtColor">
-								{eventTags.map((m1) => {return <button className='bodytags'>{m1}</button>})}
-							</p>
-							<h3 className="basetxtColor">{event.event_name}</h3>
-							<p className="basetxtColor">{event.start_date}</p>
-							<p className="basetxtColor">{this.state.eventCity}</p>
-						</div>
-						<div className="col-md-1"></div>
+						{detailHeader}
 					</div>
-
 					<div className="row featuredRow">
-						<div class="col-md-2"></div>
-
-						<div class="col-md-8 booth">
-							<button class="btn" className="fbtns" onClick={()=>this.ongoingCount(event.id)}>Going</button>
+						<div className={this.state.homeBtnClassStatus}>
+							<Link to={{pathname: "/"}}>
+								<img className="homeBtn" src={require('../assets/images/logo.png')} alt="home"/>
+							</Link>
+						</div>
+						<div className={this.state.clickableStatus}>
+							<button class="btn" className="fbtns" onClick={()=>this.ongoingCount(this.state.eventDeatail.event.id)}>Going</button>
 							<button class="btn" className="fbtns1">Discussion</button>
 							<button class="btn" className="fbtns3" onClick={()=>this.showSocialDiv()}>Share & Invite</button>
 						</div>
 						<div class="col-md-2 interested">
-							<label className="fbtns2">Interested <span className="goingCount">{event.going_count}</span> </label>
+							<label className="fbtns2">Interested <span className="goingCount">{this.state.eventDeatail.going_count}</span> </label>
 						</div>
 					</div>
-
 					<div className="row mainRow">
 						<div class="col-md-2">
-							<div className="beta">
+							<div className="cityEvents">
 								<h6 className="colHeadings">More events in {this.state.eventCity}</h6>
-								{moreEvents}
-								<br/>	
+								{eventsInCity}
+								<br/>
 							</div>
 						</div>
 						
 						<div class="col-md-8">
-							<div class="row one">
-								<div class={abuotbtncls}>
-									<a className="sbtns" onClick={()=>this.selectContent('about')} >About</a>
-								</div>
-								<div className={revBtnCls}>
-									<a onClick={()=>this.selectContent('reviews')} className="sbtns" >Reviews</a>
-								</div>
-								<div className={exibBtnCls}>
-									<a onClick={()=>this.selectContent('exibitors')} className="sbtns">Exibitors</a>
-								</div>
-								<div className={imgsBtnCls}>
-									<a onClick={()=>this.selectContent('photos')} className="sbtns" >Photos</a>
-								</div>
-								<div className={spkrBtnCls}>
-									<a onClick={()=>this.selectContent('speakers')} className="sbtns">Speakers</a>
-								</div>
-							</div>
-
-							<div class="row two">
-								{descBody}
+							<div className="mainData">
+								{this.state.loading ? (dataLoader) : (resultedBody) }
 							</div>
 						</div>
 						<div class="col-md-2">
-							<div className="alpha">
+							<div className="relatedEvents">
 								<h6 className="colHeadings">Related Events</h6>
-								{similarEvents1}
+								{relatedEvents}
 							</div>
 							<br/>
 							
-							<div className="gamma">
-								<h6 className="colHeadings">Google Adds</h6>
+							<div className="ads">
+								<h6 className="colHeadings">Google Ads</h6>
 								<br/>
-								<p className="primaryColor">Eventesy-Connecting Oppertunities</p>
+								<p className="primaryColor">NextExibition Connecting Oppertunities</p>
 							</div>
 						</div>
 					</div>
 					<Footer/>
-				</div>
+				</div>	
 			</div>
-		)
-	}
-
- 	render() {
-		 var resultedBody = '';
-		 var dataLoader = <div className='loaderComponent'>
-			 <Loader
-				type="Oval"
-				color="#ffa257"
-				height={100}
-				width={100}
-				className='loading'
-				timeout={3000} //time in millisecond
-			/>
-		</div>
- 		if(this.state.eventDeatail !== '' && this.state.eventTags.length > 0 && this.state.allTags.length > 0 && this.state.relatedEvents.length > 0 && this.state.moreventsinCity.length > 0 ){
- 			resultedBody = this.makeBody(this.state.eventDeatail,this.state.eventTags,this.state.relatedEvents,this.state.moreventsinCity);
- 		}
-    	return (
-        	<div class='body'>
-        		{this.state.loading ? (dataLoader) : (resultedBody) }
-        	</div>	
 	    )
     }
 }
 
 function SvgMaterialIcons() {
 	const classes = useStyles();
-  
 	return (
-	  	<Grid container className={classes.root}>
+	  	<Grid container>
 			<Grid>
 				<DeleteIcon className="cross" fontSize="large"/>
 			</Grid>
 		</Grid>
 	)
 }
+
+function SvgClockIcon() {
+	const classes = useStyles();
+	return (
+	  	<Grid container className={classes.root}>
+			<Grid>
+				<ClockIcon />
+			</Grid>
+		</Grid>
+	)
+}
+
+function LocationIcon() {
+	const classes = useStyles();
+	return (
+	  	<Grid container className={classes.root}>
+			<Grid>
+				<Location />
+			</Grid>
+		</Grid>
+	)
+}
+
+function PinpoinIcon() {
+	const classes = useStyles();
+	return (
+	  	<Grid container className={classes.root}>
+			<Grid>
+				<PinPoint />
+			</Grid>
+		</Grid>
+	)
+}
+
+function HomeIcon() {
+	const classes = useStyles();
+	return (
+	  	<Grid container className={classes.root}>
+			<Grid>
+				<Home />
+			</Grid>
+		</Grid>
+	)
+}
+
 export default withRouter(Details);

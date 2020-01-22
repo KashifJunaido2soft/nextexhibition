@@ -3,12 +3,19 @@
 }
 
 .footerMainDiv{
-	padding: 2%;
-	width: 101%;
+	padding-top: 2%;
+	width: 100%;
+	margin-left: 0;
+	left: 0;
 }
 
 .tinyTxt{
-	font-size: 70%;
+	font-size: 0.8rem;
+	color: white;
+}
+
+.tinyTxt1{
+	font-size: 1rem;
 	color: white;
 }
 
@@ -30,3 +37,25 @@ a.quickLinks{
 	font-size:15px;
 }
 
+.footerData2{
+	padding-top: 1%;
+	padding-bottom: 1%;
+	width: 100%;
+	margin-left: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.3);
+}
+
+@media screen and (max-width: 800px) {
+	.footerData1{
+		padding-top: 2%;
+		padding-left: 4%;
+	}
+	.footerData2{
+		padding-top: 1%;
+		padding-bottom: 1%;
+		padding-left: 2%;
+		background: rgba(0, 0, 0, 0.3);
+		margin-top: 2%;
+	}
+}

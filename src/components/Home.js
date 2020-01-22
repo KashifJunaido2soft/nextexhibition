@@ -6,6 +6,40 @@ import { Link } from 'react-router-dom';
 import Footer from "./footerComponent";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from 'react-loader-spinner';
+import Grid from '@material-ui/core/Grid';
+import Next from '@material-ui/icons/SkipNext';
+import Previous from '@material-ui/icons/SkipPrevious';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+	root: {
+		color: '#ffa257',
+		width: 60,
+		height : 60,
+	  },
+}));
+
+function NextIcon() {
+	const classes = useStyles();
+	return (
+	  	<Grid container>
+			<Grid>
+				<Next className={classes.root}/>
+			</Grid>
+		</Grid>
+	)
+}
+
+function PreviousIcon() {
+	const classes = useStyles();
+	return (
+	  	<Grid container>
+			<Grid>
+				<Previous className={classes.root}/>
+			</Grid>
+		</Grid>
+	)
+}
 
 export default class Home extends Component {
 	constructor(props){
@@ -24,12 +58,20 @@ export default class Home extends Component {
 			baseUrl : 'http://64.225.33.244:3000/',
 			baseLink : 'http://www.nextexibition.com/',
 			loading : true,
+			nextLink : null,
+			prevLink : null,
+			prevBtnClass : 'noLink',
+			nextBtnClass : 'noLink'
 		} 
 		//this.searchEvent = this.searchEvent.bind(this);
 	}
-
 	componentDidMount(){
-		
+		window.scrollTo(0, 0);
+		window.scroll({
+			top: 0,
+			left: 0,
+			behavior: 'smooth',
+		});
 		let one = this.state.apiBaseUrl + "event/allEvents/";
 		let two = this.state.apiBaseUrl + "event/allCities/";
 		let three = this.state.apiBaseUrl + "event/allTypes/";
@@ -45,12 +87,28 @@ export default class Home extends Component {
 			const responseTwo = responses[1];
 			const responseThree = responses[2];
 			const responseFour = responses[3];
+			let nextClass = '';
+			let preClass = '';
+			if(responseOne.data.next !== null){
+				nextClass = 'newLink'
+			}else{
+				nextClass = 'noLink'
+			}
+			if(responseOne.data.previous !== null){
+				preClass = 'newLink'
+			}else{
+				preClass = 'noLink'
+			}
 			this.setState({
 				events:responseOne.data.results,
 				cities:responseTwo.data,
 				types:responseThree.data,
 				tags:responseFour.data,
-				loading : false
+				nextLink : responseOne.data.next,
+				prevLink : responseOne.data.previous,
+				nextBtnClass : nextClass,
+				prevBtnClass : preClass,
+				loading : false,
 			})
 		})).catch(errors => {
 				console.log(errors);
@@ -62,7 +120,12 @@ export default class Home extends Component {
 		this.setState({
 			loading : true
 		})
-
+		window.scrollTo(0, 0);
+		window.scroll({
+			top: 0,
+			left: 0,
+			behavior: 'smooth',
+		});
 		let url = this.state.apiBaseUrl + 'event/allEvents/'
 		if(id !== 0){
 			url = this.state.apiBaseUrl + 'event/allEvents/?event_city='+id;
@@ -95,8 +158,24 @@ export default class Home extends Component {
 		
 		axios.get(url)
 		.then(response => {
+			let nextClass = '';
+			let preClass = '';
+			if(response.data.next !== null){
+				nextClass = 'newLink'
+			}else{
+				nextClass = 'noLink'
+			}
+			if(response.data.previous !== null){
+				preClass = 'newLink'
+			}else{
+				preClass = 'noLink'
+			}
 			this.setState({
 				events:response.data.results,
+				nextLink : response.data.next,
+				prevLink : response.data.previous,
+				nextBtnClass : nextClass,
+				prevBtnClass : preClass,
 				loading : false,
 				cityId : id,
 			})
@@ -110,6 +189,12 @@ export default class Home extends Component {
 		this.setState({
 			loading : true
 		})
+		window.scrollTo(0, 0);
+		window.scroll({
+			top: 0,
+			left: 0,
+			behavior: 'smooth',
+		});
 		let url = this.state.apiBaseUrl + 'event/allEvents/'
 		if(id !== 0){
 			url = this.state.apiBaseUrl + 'event/allEvents/?event_type='+id;
@@ -140,8 +225,24 @@ export default class Home extends Component {
 		}
 		axios.get(url)
 		.then(response => {
+			let nextClass = '';
+			let preClass = '';
+			if(response.data.next !== null){
+				nextClass = 'newLink'
+			}else{
+				nextClass = 'noLink'
+			}
+			if(response.data.previous !== null){
+				preClass = 'newLink'
+			}else{
+				preClass = 'noLink'
+			}
 			this.setState({
 				events:response.data.results,
+				nextLink : response.data.next,
+				prevLink : response.data.previous,
+				nextBtnClass : nextClass,
+				prevBtnClass : preClass,
 				loading : false,
 				CategoryId : id
 			})
@@ -156,6 +257,12 @@ export default class Home extends Component {
 		this.setState({
 			loading : true
 		})
+		window.scrollTo(0, 0);
+		window.scroll({
+			top: 0,
+			left: 0,
+			behavior: 'smooth',
+		});
 		var tagslist = this.state.checkBoxStatus;
 		if(event.target.checked === true){
 			tagslist.push(id);
@@ -169,8 +276,6 @@ export default class Home extends Component {
 				url = url+'&event_tag=' + tagslist[i];
 			}
 		}
-		
-        
         let eventCity=this.state.cityId;
         if(eventCity !== 0){
 			if (url.indexOf('?') > -1)
@@ -192,31 +297,137 @@ export default class Home extends Component {
 		}
         axios.get(url)
 		.then((response) => {
-			console.log(response.data.results.length);
-	        this.setState({
-				events : response.data.results,
+			let nextClass = '';
+			let preClass = '';
+			if(response.data.next !== null){
+				nextClass = 'newLink'
+			}else{
+				nextClass = 'noLink'
+			}
+			if(response.data.previous !== null){
+				preClass = 'newLink'
+			}else{
+				preClass = 'noLink'
+			}
+			this.setState({
+				events:response.data.results,
+				nextLink : response.data.next,
+				prevLink : response.data.previous,
+				nextBtnClass : nextClass,
+				prevBtnClass : preClass,
 				loading : false,
-				checkBoxStatus:tagslist,
-	        })
+				checkBoxStatus:tagslist
+			})
 		})
 		.catch(error =>{
 			console.log(error);
 		})
 	}
 
-	eventsList(event){  		
+	nextEvents(){
+		if(this.state.nextLink !== null){
+			this.setState({
+				loading : true
+			})
+			window.scrollTo(0, 0);
+			window.scroll({
+				top: 0,
+				left: 0,
+				behavior: 'smooth',
+			});
+			let url = this.state.nextLink
+			axios.get(url)
+			.then(response => {
+				let nextClass = '';
+				let preClass = '';
+				if(response.data.next !== null){
+					nextClass = 'newLink'
+				}else{
+					nextClass = 'noLink'
+				}
+				if(response.data.previous !== null){
+					preClass = 'newLink'
+				}else{
+					preClass = 'noLink'
+				}
+				this.setState({
+					events:response.data.results,
+					nextLink : response.data.next,
+					prevLink : response.data.previous,
+					nextBtnClass : nextClass,
+					prevBtnClass : preClass,
+					loading : false,
+				})
+			})
+			.catch(error =>{
+				console.log(error);
+			})
+		}
+	}
+
+	prevEvents(){
+		if(this.state.prevLink !== null){
+			this.setState({
+				loading : true
+			})
+			window.scrollTo(0, 0);
+			window.scroll({
+				top: 0,
+				left: 0,
+				behavior: 'smooth',
+			});
+			let url = this.state.prevLink
+			axios.get(url)
+			.then(response => {
+				let nextClass = '';
+				let preClass = '';
+				if(response.data.next !== null){
+					nextClass = 'newLink'
+				}else{
+					nextClass = 'noLink'
+				}
+				if(response.data.previous !== null){
+					preClass = 'newLink'
+				}else{
+					preClass = 'noLink'
+				}
+				this.setState({
+					events:response.data.results,
+					nextLink : response.data.next,
+					prevLink : response.data.previous,
+					nextBtnClass : nextClass,
+					prevBtnClass : preClass,
+					loading : false,
+				})
+			})
+			.catch(error =>{
+				console.log(error);
+			})
+		}
+	}
+
+	eventsList(event){
+		let month_names =["Jan","Feb","Mar",
+		"Apr","May","Jun",
+		"Jul","Aug","Sep",
+		"Oct","Nov","Dec"];
+		let dateArr = event.start_date.split("-");
+		let year = dateArr[0];
+		let month = month_names[parseInt(dateArr[1])-1];
+		let day = dateArr[2];		
 		return(
 			<div key={event.id} class="col-md-4">
 				<Link to={{pathname: "/details/"+event.id}}>
 					<div class="card structure">
 		                <img class="card-img-top" className="cardImg" src={event.main_image} alt={event.event_name} />
 		                <div class="card-body">
-		                  <b class="card-title t1 primaryColor">  {((event.event_name).length > 30) ? 
-	   						 (((event.event_name).substring(0,33-3)) + '...') : 
-	    					event.event_name } </b>
-		                  <p class="card-text t2 primaryColor"> {((event.event_address).length > 30) ? 
-	   						 (((event.event_address).substring(0,33-3)) + '...') : 
-	    					event.event_address } </p>
+							<b class="card-title t1 primaryColor">  {((event.event_name).length > 20) ? 
+								(((event.event_name).substring(0,20)) + '...') : 
+								event.event_name } </b>
+							<p class="card-text t2 primaryColor"> {((event.event_address).length > 20) ? 
+								(((event.event_address).substring(0,20)) + '...') : 
+								event.event_address } </p>
+							<b class="card-title t1 primaryColor">  {month+" "+day+" "+year} </b>
 		                </div> 
 		            </div>
 		        </Link>
@@ -269,9 +480,25 @@ export default class Home extends Component {
 		var url = this.state.apiBaseUrl + 'event/allEvents/?search='+this.state.search;
 		axios.get(url)
 		.then(response => {
+			let nextClass = '';
+			let preClass = '';
+			if(response.data.next !== null){
+				nextClass = 'newLink'
+			}else{
+				nextClass = 'noLink'
+			}
+			if(response.data.previous !== null){
+				preClass = 'newLink'
+			}else{
+				preClass = 'noLink'
+			}
 			this.setState({
 				events:response.data.results,
-				loading : false
+				nextLink : response.data.next,
+				prevLink : response.data.previous,
+				nextBtnClass : nextClass,
+				prevBtnClass : preClass,
+				loading : false,
 			})
 		})
 		.catch(error =>{
@@ -311,83 +538,87 @@ export default class Home extends Component {
     		}
     		
     	}
-
     	var categoriesArr = [];
     	if(this.state.types.length > 0){
     		for(let i=0;i<this.state.types.length;i++){
     			categoriesArr.push(this.categoriesList(this.state.types[i]))
     		}
     	}
-
         return (
-        	<div class="body">
-	            <div className="row head1 primaryBackground">		
-	            	<div className="col-md-3"></div>
-	            	<div className="first col-md-6">
-		            	<h3 className="main">Next<span style={{color:'#ffa257'}}>Exhibition</span></h3>
-		            	<p id="one">Find interesting shows & conferences to attend</p>
-		            	<input type="text" className="sbar primaryColor" value={this.state.search} placeholder="Search by : city category or name " name="search" onChange={(e)=>this.searchFieldChange(e)} onKeyPress={(e) => { if(e.key === 'Enter'){this.searchEvent(e)}}} />
-	      				<button className="newBtn" class="button newBtn" onClick={(e)=>this.searchEvent(e)}><span style={{color:'white'}}>Search</span></button>
-	            	</div>
-	            	<div className="col-md-3"></div>
-	            </div>
-
-	            <div className="row featuredRowHome">
-            		<div class="col-md-12 col-sm-12 col-lg-12 featuredData">
-						<h6>Featured Events <span class="featured">handpicked and popular events to go</span></h6>
+        	<div >
+				<div className="row homeHeader">
+					<div className="col-md-3"></div>
+					<div className="first col-md-6">
+						<h2 className="main">Next<span style={{color:'#ffa257'}}>Exibition</span></h2>
+						<p id="one">Find interesting shows & conferences to attend</p>
+						<input type="text" className="sbar primaryColor" value={this.state.search} placeholder="Search by city category #tag or by name" name="search" onChange={(e)=>this.searchFieldChange(e)} onKeyPress={(e) => { if(e.key === 'Enter'){this.searchEvent(e)}}} />
+						<button className="newBtn" class="button newBtn" onClick={(e)=>this.searchEvent(e)}><span style={{color:'white'}}>Search</span></button>
 					</div>
+					<div className="col-md-3"></div>
 				</div>
+				<div class="body">
+					<div className="row featuredRowHome">
+						<div class="col-md-12 col-sm-12 col-lg-12">
+							<h6>Featured Events <span class="featured">handpicked and popular events to go</span></h6>
+						</div>
+					</div>
 
-				<div className="dataRowHome">
-	            	<div className="row">
-			        	<div class="col-md-2 col-sm-12 col-lg-2 ">
-			        		<div className="tagsFilter">
-								<h6 className="headingsAlign">Filters</h6>
-								{tagsArr}
-							</div>
-			        	</div>
-
-			        	<div class="col-md-8 col-sm-12 col-lg-8">
-			        		<div class="row events">
-								{this.state.loading ? (dataLoader) : (resultedDiv.length > 0 ? resultedDiv : noData) }
-			        		</div>
-			        	</div>
-
-			        	<div class="col-md-2 col-sm-12 col-lg-2">
-							<div className="citiesFilter">
-								<h6 className="headingsAlign">Cities</h6>
-								<div class="col-md-2">
-									<a className="links" onClick={() => this.getEventByCity(0)}> <span className="listColor">All</span></a><br/>
+					<div className="dataRowHome">
+						<div className="row">
+							<div class="col-md-2 col-sm-12 col-lg-2 ">
+								<div className="tagsFilter">
+									<h6 className="headingsAlign">Filters</h6>
+									{tagsArr}
 								</div>
-								{citiesArr}
 							</div>
-							<br/>
 
-							<div className="categoryFilter">
-								<h6 className="headingsAlign">Categories</h6>
-								<div class="col-md-2">
-									<a className="links" onClick={() => this.getEventByCategory(0)}> <span className="listColor">All</span></a><br/>
+							<div class="col-md-8 col-sm-12 col-lg-8">
+								<div class="row events">
+									{this.state.loading ? (dataLoader) : (resultedDiv.length > 0 ? resultedDiv : noData) }
 								</div>
-								{categoriesArr}<br/>	
+								<div class="row">
+									<div class="col-md-6 col-sm-6 previousBtn">
+										<button className={this.state.prevBtnClass} disabled={this.state.loading} onClick={()=> this.prevEvents()}><PreviousIcon/></button>
+									</div>
+									<div class="col-md-6 col-sm-6 nextBtn">
+										<button className={this.state.nextBtnClass} disabled={this.state.loading} onClick={()=> this.nextEvents()}><NextIcon/></button>
+									</div>
+								</div>
 							</div>
-							<br/>
-							<div className="addsHome">
-								<h6 className="headingsAlign">Google Adds</h6>
+
+							<div class="col-md-2 col-sm-12 col-lg-2">
+								<div className="citiesFilter">
+									<h6 className="headingsAlign">Cities</h6>
+									<div class="col-md-2">
+										<a className="links" onClick={() => this.getEventByCity(0)}> <span className="listColor">All</span></a><br/>
+									</div>
+									{citiesArr}
+								</div>
 								<br/>
+
+								<div className="categoryFilter">
+									<h6 className="headingsAlign">Categories</h6>
+									<div class="col-md-2">
+										<a className="links" onClick={() => this.getEventByCategory(0)}> <span className="listColor">All</span></a><br/>
+									</div>
+									{categoriesArr}<br/>	
+								</div>
 								<br/>
-								<div class="col-md-2">
-									<p className="primaryColor">Eventesy-Connecting Oppertunities</p>
+								<div className="addsHome">
+									<h6 className="headingsAlign">Google Adds</h6>
+									<br/>
+									<br/>
+									<div class="col-md-2">
+										<p className="primaryColor">NextExibition Connecting Oppertunities</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-	            </div>
-
-
+				</div>
 	            <div className="footerr">
 	            	<Footer/>	
 	            </div>
-	            
 		    </div>	
 	    )
     }
