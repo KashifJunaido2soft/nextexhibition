@@ -57,11 +57,15 @@ export default class Home extends Component {
 			apiBaseUrl : 'http://64.225.33.244:8000/',
 			baseUrl : 'http://64.225.33.244:3000/',
 			baseLink : 'http://www.nextexibition.com/',
+			// apiBaseUrl : 'http://192.168.0.115:8000/',
+			// baseUrl : 'http://192.168.0.102:8080/',
+			// baseLink : 'http://192.168.0.102:8080/',
 			loading : true,
 			nextLink : null,
 			prevLink : null,
 			prevBtnClass : 'noLink',
-			nextBtnClass : 'noLink'
+			nextBtnClass : 'noLink',
+			authKey : "Api-Key Ex4rWZES.i2w8aTuvjPmK6DYh6TUJCc5jkdmpYpYE"
 		} 
 		//this.searchEvent = this.searchEvent.bind(this);
 	}
@@ -77,10 +81,10 @@ export default class Home extends Component {
 		let three = this.state.apiBaseUrl + "event/allTypes/";
 		let four = this.state.apiBaseUrl + "event/allTags/";
 
-		const requestOne = axios.get(one);
-		const requestTwo = axios.get(two);
-		const requestThree = axios.get(three);
-		const requestFour = axios.get(four);
+		const requestOne = axios.get(one,{ 'headers': { 'Authorization': this.state.authKey } });
+		const requestTwo = axios.get(two,{ 'headers': { 'Authorization': this.state.authKey } });
+		const requestThree = axios.get(three,{ 'headers': { 'Authorization': this.state.authKey } });
+		const requestFour = axios.get(four,{ 'headers': { 'Authorization': this.state.authKey } });
 
 		axios.all([requestOne, requestTwo, requestThree, requestFour]).then(axios.spread((...responses) => {
 			const responseOne = responses[0];
@@ -156,7 +160,7 @@ export default class Home extends Component {
 			}	
 		}
 		
-		axios.get(url)
+		axios.get(url,{ 'headers': { 'Authorization': this.state.authKey } })
 		.then(response => {
 			let nextClass = '';
 			let preClass = '';
@@ -223,7 +227,7 @@ export default class Home extends Component {
 				}
 			}
 		}
-		axios.get(url)
+		axios.get(url,{ 'headers': { 'Authorization': this.state.authKey } })
 		.then(response => {
 			let nextClass = '';
 			let preClass = '';
@@ -295,7 +299,7 @@ export default class Home extends Component {
 				url = url+'?event_type=' + eventCategory;
 			}
 		}
-        axios.get(url)
+        axios.get(url,{ 'headers': { 'Authorization': this.state.authKey } })
 		.then((response) => {
 			let nextClass = '';
 			let preClass = '';
@@ -336,7 +340,7 @@ export default class Home extends Component {
 				behavior: 'smooth',
 			});
 			let url = this.state.nextLink
-			axios.get(url)
+			axios.get(url,{ 'headers': { 'Authorization': this.state.authKey } })
 			.then(response => {
 				let nextClass = '';
 				let preClass = '';
@@ -377,7 +381,7 @@ export default class Home extends Component {
 				behavior: 'smooth',
 			});
 			let url = this.state.prevLink
-			axios.get(url)
+			axios.get(url,{ 'headers': { 'Authorization': this.state.authKey } })
 			.then(response => {
 				let nextClass = '';
 				let preClass = '';
@@ -416,18 +420,18 @@ export default class Home extends Component {
 		let month = month_names[parseInt(dateArr[1])-1];
 		let day = dateArr[2];		
 		return(
-			<div key={event.id} class="col-md-4">
+			<div key={event.id} className="col-md-4">
 				<Link to={{pathname: "/details/"+event.id}}>
-					<div class="card structure">
-		                <img class="card-img-top" className="cardImg" src={event.main_image} alt={event.event_name} />
-		                <div class="card-body">
-							<b class="card-title t1 primaryColor">  {((event.event_name).length > 20) ? 
+					<div className="card structure">
+		                <img className="card-img-top cardImg" src={event.main_image} alt={event.event_name} />
+		                <div className="card-body">
+							<b className="card-title t1 primaryColor">  {((event.event_name).length > 20) ? 
 								(((event.event_name).substring(0,20)) + '...') : 
 								event.event_name } </b>
-							<p class="card-text t2 primaryColor"> {((event.event_address).length > 20) ? 
+							<p className="card-text t2 primaryColor"> {((event.event_address).length > 20) ? 
 								(((event.event_address).substring(0,20)) + '...') : 
 								event.event_address } </p>
-							<b class="card-title t1 primaryColor">  {month+" "+day+" "+year} </b>
+							<b className="card-title t1 primaryColor">  {month+" "+day+" "+year} </b>
 		                </div> 
 		            </div>
 		        </Link>
@@ -438,7 +442,7 @@ export default class Home extends Component {
 	citiesList(cities){
 		const className = this.state.cityId === cities.id ? 'listColorActive' : 'listColor';
 		return(
-				<div key= {cities.id} class="col-md-2">
+				<div key= {cities.id} className="col-md-2">
 					<a className="links" onClick={() => this.getEventByCity(cities.id)}> <span className={className}>{cities.name}</span></a><br/>
 				</div>
 			)
@@ -458,7 +462,7 @@ export default class Home extends Component {
 	categoriesList(categories){
 		const className = this.state.CategoryId === categories.id ? 'listColorActive' : 'listColor';
 		return(
-				<div key= {categories.id} class="col-md-2">
+				<div key= {categories.id} className="col-md-2">
 					<a className="links" onClick={()=>this.getEventByCategory(categories.id)}><span className={className}>{categories.name}</span></a><br/>
 				</div>
 		)
@@ -478,7 +482,7 @@ export default class Home extends Component {
 			loading : true
 		})
 		var url = this.state.apiBaseUrl + 'event/allEvents/?search='+this.state.search;
-		axios.get(url)
+		axios.get(url,{ 'headers': { 'Authorization': this.state.authKey } })
 		.then(response => {
 			let nextClass = '';
 			let preClass = '';
@@ -552,44 +556,44 @@ export default class Home extends Component {
 						<h2 className="main">Next<span style={{color:'#ffa257'}}>Exibition</span></h2>
 						<p id="one">Find interesting shows & conferences to attend</p>
 						<input type="text" className="sbar primaryColor" value={this.state.search} placeholder="Search by city category #tag or by name" name="search" onChange={(e)=>this.searchFieldChange(e)} onKeyPress={(e) => { if(e.key === 'Enter'){this.searchEvent(e)}}} />
-						<button className="newBtn" class="button newBtn" onClick={(e)=>this.searchEvent(e)}><span style={{color:'white'}}>Search</span></button>
+						<button className="newBtn button" onClick={(e)=>this.searchEvent(e)}><span style={{color:'white'}}>Search</span></button>
 					</div>
 					<div className="col-md-3"></div>
 				</div>
-				<div class="body">
+				<div className="body">
 					<div className="row featuredRowHome">
-						<div class="col-md-12 col-sm-12 col-lg-12">
-							<h6>Featured Events <span class="featured">handpicked and popular events to go</span></h6>
+						<div className="col-md-12 col-sm-12 col-lg-12">
+							<h6>Featured Events <span className="featured">handpicked and popular events to go</span></h6>
 						</div>
 					</div>
 
 					<div className="dataRowHome">
 						<div className="row">
-							<div class="col-md-2 col-sm-12 col-lg-2 ">
+							<div className="col-md-2 col-sm-12 col-lg-2 ">
 								<div className="tagsFilter">
 									<h6 className="headingsAlign">Filters</h6>
 									{tagsArr}
 								</div>
 							</div>
 
-							<div class="col-md-8 col-sm-12 col-lg-8">
-								<div class="row events">
+							<div className="col-md-8 col-sm-12 col-lg-8">
+								<div className="row events">
 									{this.state.loading ? (dataLoader) : (resultedDiv.length > 0 ? resultedDiv : noData) }
 								</div>
-								<div class="row">
-									<div class="col-md-6 col-sm-6 previousBtn">
+								<div className="row">
+									<div className="col-md-6 col-sm-6 previousBtn">
 										<button className={this.state.prevBtnClass} disabled={this.state.loading} onClick={()=> this.prevEvents()}><PreviousIcon/></button>
 									</div>
-									<div class="col-md-6 col-sm-6 nextBtn">
+									<div className="col-md-6 col-sm-6 nextBtn">
 										<button className={this.state.nextBtnClass} disabled={this.state.loading} onClick={()=> this.nextEvents()}><NextIcon/></button>
 									</div>
 								</div>
 							</div>
 
-							<div class="col-md-2 col-sm-12 col-lg-2">
+							<div className="col-md-2 col-sm-12 col-lg-2">
 								<div className="citiesFilter">
 									<h6 className="headingsAlign">Cities</h6>
-									<div class="col-md-2">
+									<div className="col-md-2">
 										<a className="links" onClick={() => this.getEventByCity(0)}> <span className="listColor">All</span></a><br/>
 									</div>
 									{citiesArr}
@@ -598,7 +602,7 @@ export default class Home extends Component {
 
 								<div className="categoryFilter">
 									<h6 className="headingsAlign">Categories</h6>
-									<div class="col-md-2">
+									<div className="col-md-2">
 										<a className="links" onClick={() => this.getEventByCategory(0)}> <span className="listColor">All</span></a><br/>
 									</div>
 									{categoriesArr}<br/>	
@@ -608,7 +612,7 @@ export default class Home extends Component {
 									<h6 className="headingsAlign">Google Adds</h6>
 									<br/>
 									<br/>
-									<div class="col-md-2">
+									<div className="col-md-2">
 										<p className="primaryColor">NextExibition Connecting Oppertunities</p>
 									</div>
 								</div>

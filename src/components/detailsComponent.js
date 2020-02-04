@@ -21,8 +21,6 @@ import Grid from '@material-ui/core/Grid';
 import DeleteIcon from '@material-ui/icons/Cancel';
 import ClockIcon from '@material-ui/icons/AccessTime';
 import Location from '@material-ui/icons/LocationCity';
-import PinPoint from '@material-ui/icons/PinDrop';
-import Home from '@material-ui/icons/Home';
 import { makeStyles } from '@material-ui/core/styles';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from 'react-loader-spinner';
@@ -54,6 +52,9 @@ class Details extends Component {
 			allCities:[],
 			relatedEventByName : '',
 			socialIconClass:'socialIconsDivHide',
+			// apiBaseUrl : 'http://192.168.0.115:8000/',
+			// baseUrl : 'http://192.168.0.102:8080/',
+			// baseLink : 'http://192.168.0.102:8080/',
 			apiBaseUrl : 'http://64.225.33.244:8000/',
 			baseUrl : 'http://64.225.33.244:3000/',
 			baseLink : 'http://www.nextexibition.com/',
@@ -62,6 +63,7 @@ class Details extends Component {
 			imageSlider : 'hideImageSlider',
 			clickableStatus : 'col-md-8 booth disabledClick',
 			homeBtnClassStatus : 'col-md-2 booth disabledClick',
+			authKey : "Api-Key Ex4rWZES.i2w8aTuvjPmK6DYh6TUJCc5jkdmpYpYE"
 		}
 	}
 	componentDidMount(){
@@ -72,13 +74,13 @@ class Details extends Component {
 			behavior: 'smooth',
 		});
 		const id = this.props.match.params.id;
-		let eventUrl = this.state.apiBaseUrl + 'event/allEvents/?id='+id;
+		let eventUrl = this.state.apiBaseUrl + 'event/eventListWithImages/?id='+id;
 		let cityUrl = this.state.apiBaseUrl + "event/allCities/";
 		let tagsUrl = this.state.apiBaseUrl + "event/allTags/";
 		
-		const cityDataReq = axios.get(cityUrl);
-		const tagsDataReq = axios.get(tagsUrl);
-		const eventDataReq = axios.get(eventUrl);
+		const cityDataReq = axios.get(cityUrl,{ 'headers': { 'Authorization': this.state.authKey } });
+		const tagsDataReq = axios.get(tagsUrl,{ 'headers': { 'Authorization': this.state.authKey } });
+		const eventDataReq = axios.get(eventUrl,{ 'headers': { 'Authorization': this.state.authKey } });
 
 		axios.all([cityDataReq, tagsDataReq, eventDataReq]).then(axios.spread((...responses) => {
 			
@@ -118,7 +120,7 @@ class Details extends Component {
 				clickableStatus : 'col-md-8 booth enabledClick',
 				homeBtnClassStatus : 'col-md-2 booth enabledClick',
 			})
-			axios.get(this.state.apiBaseUrl + 'event/allEvents?event_type=' + eventDataRes.event_type)
+			axios.get(this.state.apiBaseUrl + 'event/allEvents?event_type=' + eventDataRes.event_type, { 'headers': { 'Authorization': this.state.authKey } })
 	        .then(response => {
 	            this.setState({relatedEvents : response.data.results});
 	        })
@@ -126,7 +128,7 @@ class Details extends Component {
 	            console.log(error);
 	        })
 
-	        axios.get(this.state.apiBaseUrl + 'event/allEvents?event_city=' + eventDataRes.event_city)
+	        axios.get(this.state.apiBaseUrl + 'event/allEvents?event_city=' + eventDataRes.event_city , { 'headers': { 'Authorization': this.state.authKey } })
 	        .then(response => {
 	            this.setState({moreventsinCity : response.data.results});
 	        })
@@ -146,8 +148,8 @@ class Details extends Component {
 			behavior: 'smooth',
 		});
 		this.setState({loading : true})
-		let url = this.state.apiBaseUrl + 'event/allEvents/?id=' + id;
-		axios.get(url)
+		let url = this.state.apiBaseUrl + 'event/eventListWithImages/?id=' + id;
+		axios.get(url,{ 'headers': { 'Authorization': this.state.authKey } })
 		.then(response => {
 			const cityDataRes = this.state.allCities;
 			const tagsDataRes = this.state.allTags;
@@ -182,7 +184,7 @@ class Details extends Component {
 				eventCity : thisEventCity,
 				loading : false
 			})
-			axios.get(this.state.apiBaseUrl + 'event/allEvents?event_type=' + eventDataRes.event_type)
+			axios.get(this.state.apiBaseUrl + 'event/allEvents?event_type=' + eventDataRes.event_type , { 'headers': { 'Authorization': this.state.authKey } })
 	        .then(response => {
 	            this.setState({relatedEvents : response.data.results});
 	        })
@@ -190,7 +192,7 @@ class Details extends Component {
 	            console.log(error);
 	        })
 			if(eventDataRes.event_city !== oldCityid){
-				axios.get(this.state.apiBaseUrl + 'event/allEvents?event_city=' + eventDataRes.event_city)
+				axios.get(this.state.apiBaseUrl + 'event/allEvents?event_city=' + eventDataRes.event_city , { 'headers': { 'Authorization': this.state.authKey } })
 				.then(response => {
 					this.setState({moreventsinCity : response.data.results});
 				})
@@ -258,7 +260,7 @@ class Details extends Component {
 		var data = ({
 			'event_id' : id,
 		})
-		axios.post(this.state.apiBaseUrl + 'event/postGoingCount', data)
+		axios.post(this.state.apiBaseUrl + 'event/postGoingCount', data,{ 'headers': { 'Authorization': this.state.authKey } })
 		.then(response => {
 			let currentEvent = this.state.eventDeatail;
 			currentEvent.going_count = response.data.going_count
@@ -339,10 +341,6 @@ class Details extends Component {
 
 	makeBody(event){
 		var descBody = '';
-		var similarEvents = '';
-		var similarEvents1 = '';
-		var moreEvents = '';
-		var moreEvents1 = '';
 	
 		var abuotbtncls = 'selectionBtn';
 		var revBtnCls = 'selectionBtn';
@@ -429,7 +427,7 @@ class Details extends Component {
 
 	moreEventsInThisCity(moreventsinCity){
 		var moreEvents = '';
-		moreEvents = moreventsinCity.map((eventobj, index) => { 
+		moreEvents = moreventsinCity.map((eventobj, index) => {
 			let month_names =["Jan","Feb","Mar",
 			"Apr","May","Jun",
 			"Jul","Aug","Sep",
@@ -487,7 +485,7 @@ class Details extends Component {
 						<td onClick={()=>this.getEventDetailsByName(eventobj.id)}>
 							<span className="eventName">{eventobj.event_name}</span>
 							<br/>
-							<b className="primaryColor">{this.state.allCities.map((evnt) => {if(eventobj.event_city == evnt.id){return evnt.name}})}</b>
+							<b className="primaryColor">{this.state.allCities.map((evnt) => {if(eventobj.event_city === evnt.id){return evnt.name}})}</b>
 						</td>
 						</Link>
 					</tr>
@@ -521,7 +519,7 @@ class Details extends Component {
 		var sliderCarousel = "";
  		if(this.state.eventDeatail !== ''  && this.state.eventTags.length > 0){
 			shareUrl = this.state.baseLink + 'details/'+ this.state.eventDeatail.id;
-			title = <a href={shareUrl} target="_blank">{this.state.eventDeatail.event_name}</a>
+			title = <a href={shareUrl} target="_blank" rel="noopener noreferrer">{this.state.eventDeatail.event_name}</a>
 			resultedBody = this.makeBody(this.state.eventDeatail);
 			sliderCarousel = <div className={this.state.imageSlider}>
 				<Carousel showArrows={true} showThumbs={false} autoPlay={true} interval={3000} infiniteLoop={true}>
@@ -600,7 +598,7 @@ class Details extends Component {
 							</Link>
 						</div>
 						<div className={this.state.clickableStatus}>
-							<button class="btn" className="fbtns" onClick={()=>this.ongoingCount(this.state.eventDeatail.event.id)}>Going</button>
+							<button class="btn" className="fbtns" onClick={()=>this.ongoingCount(this.state.eventDeatail.id)}>Going</button>
 							<button class="btn" className="fbtns1">Discussion</button>
 							<button class="btn" className="fbtns3" onClick={()=>this.showSocialDiv()}>Share & Invite</button>
 						</div>
@@ -644,7 +642,6 @@ class Details extends Component {
 }
 
 function SvgMaterialIcons() {
-	const classes = useStyles();
 	return (
 	  	<Grid container>
 			<Grid>
@@ -676,26 +673,5 @@ function LocationIcon() {
 	)
 }
 
-function PinpoinIcon() {
-	const classes = useStyles();
-	return (
-	  	<Grid container className={classes.root}>
-			<Grid>
-				<PinPoint />
-			</Grid>
-		</Grid>
-	)
-}
-
-function HomeIcon() {
-	const classes = useStyles();
-	return (
-	  	<Grid container className={classes.root}>
-			<Grid>
-				<Home />
-			</Grid>
-		</Grid>
-	)
-}
 
 export default withRouter(Details);
