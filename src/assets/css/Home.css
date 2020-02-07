@@ -183,6 +183,7 @@
 .links:hover{
   font-size: 15px;
   cursor:pointer;
+  font-weight: bold;
 }
 
 .listColor{
@@ -191,10 +192,12 @@
 
 .listColor:hover{
   color:#ffa257; 
+  font-weight: bold;
 }
 
 .listColorActive{
   color:#ffa257; 
+  font-weight: bold;
 }
 
 a:active {
@@ -212,10 +215,6 @@ a:active {
 }
 
 h6{
-  color: #ffa257;
-}
-
-h8{
   color: #ffa257;
 }
 
@@ -270,10 +269,7 @@ a.main2{
   cursor: pointer; 
 }
 
-@media screen and (max-width: 1130px) {
-
-}
-
-@media screen and (max-width: 770px) {
-
+.weeklyEvnts{
+  color: #ffa257;
+  padding-left: 1%;
 }

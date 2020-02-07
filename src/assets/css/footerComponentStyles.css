@@ -45,6 +45,27 @@ a.quickLinks{
 	left: 0;
 	background: rgba(0, 0, 0, 0.3);
 }
+.appStoreImg{
+	width: 100%;
+	height: 100%;
+}
+.playStoreImg{
+	width: 100%;
+	height: 100%;
+}
+.footerEmail{
+	color : #ffffff !important;
+	display: inline;
+}
+@media screen and (min-width: 768px) {
+	.playStoreDiv{
+		margin-bottom: 5%;
+		padding-left: 0px;
+	}
+	.appStoreDiv{
+		margin-bottom: 5%;
+	}
+}
 
 @media screen and (max-width: 800px) {
 	.footerData1{

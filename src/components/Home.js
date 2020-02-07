@@ -46,6 +46,7 @@ export default class Home extends Component {
 		super(props);
 		this.state={
 			events:[],
+			weeklyEvents:[],
 			cities:[],
 			types:[],
 			tags:[],
@@ -65,7 +66,7 @@ export default class Home extends Component {
 			prevLink : null,
 			prevBtnClass : 'noLink',
 			nextBtnClass : 'noLink',
-			authKey : "Api-Key Ex4rWZES.i2w8aTuvjPmK6DYh6TUJCc5jkdmpYpYE"
+			authKey : "Api-Key Ex4rWZES.i2w8aTuvjPmK6DYh6TUJCc5jkdmpYpYE",
 		} 
 		//this.searchEvent = this.searchEvent.bind(this);
 	}
@@ -76,21 +77,48 @@ export default class Home extends Component {
 			left: 0,
 			behavior: 'smooth',
 		});
-		let one = this.state.apiBaseUrl + "event/allEvents/";
+		///////////////////////////////////////////////////
+		var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+		let month_names =["Jan","Feb","Mar",
+		"Apr","May","Jun",
+		"Jul","Aug","Sep",
+		"Oct","Nov","Dec"];
+		let fullToday = new Date();
+		let dd = String(fullToday.getDate()).padStart(2, '0');
+		let mm = String(fullToday.getMonth() + 1).padStart(2, '0'); //January is 0!
+		let yyyy = fullToday.getFullYear();
+		let dayName  = days[fullToday.getDay()];
+		let monthName = month_names[fullToday.getMonth()];
+		let today = yyyy + '-' + mm + '-' + dd;
+		let todayDate = monthName + ' ' + dd + ' ' + yyyy
+		let todayTim = new Date(fullToday.getTime());
+		todayTim.setDate(fullToday.getDate() + (7 + 7 - fullToday.getDay()) % 7);
+		let nextSundaydd = String(todayTim.getDate()).padStart(2, '0');
+		let nextSundaymm = String(todayTim.getMonth() + 1).padStart(2, '0'); //January is 0!
+		let nextSundayyyyy = todayTim.getFullYear();
+		let nextSundayMonthName = month_names[todayTim.getMonth()];
+		let nextSundaydate = nextSundayyyyy + '-' + nextSundaymm + '-' + nextSundaydd;
+		let nextSundayFullDate = nextSundayMonthName + ' ' + nextSundaydd + ' ' + nextSundayyyyy
+		///////////////////////////////////////////////////
+		//let one = this.state.apiBaseUrl + "event/allEvents/";
+		let one = this.state.apiBaseUrl + "event/allEvents/?start_date__gt="+nextSundaydate;
 		let two = this.state.apiBaseUrl + "event/allCities/";
 		let three = this.state.apiBaseUrl + "event/allTypes/";
 		let four = this.state.apiBaseUrl + "event/allTags/";
+		let five = this.state.apiBaseUrl + "event/allEvents/?start_date__gte="+today+"&start_date__lte="+nextSundaydate;
 
 		const requestOne = axios.get(one,{ 'headers': { 'Authorization': this.state.authKey } });
 		const requestTwo = axios.get(two,{ 'headers': { 'Authorization': this.state.authKey } });
 		const requestThree = axios.get(three,{ 'headers': { 'Authorization': this.state.authKey } });
 		const requestFour = axios.get(four,{ 'headers': { 'Authorization': this.state.authKey } });
+		const requestFive = axios.get(five,{ 'headers': { 'Authorization': this.state.authKey } });
 
-		axios.all([requestOne, requestTwo, requestThree, requestFour]).then(axios.spread((...responses) => {
+		axios.all([requestOne, requestTwo, requestThree, requestFour, requestFive]).then(axios.spread((...responses) => {
 			const responseOne = responses[0];
 			const responseTwo = responses[1];
 			const responseThree = responses[2];
 			const responseFour = responses[3];
+			const responseFive = responses[4];
 			let nextClass = '';
 			let preClass = '';
 			if(responseOne.data.next !== null){
@@ -112,10 +140,16 @@ export default class Home extends Component {
 				prevLink : responseOne.data.previous,
 				nextBtnClass : nextClass,
 				prevBtnClass : preClass,
-				loading : false,
+				weeklyEvents : responseFive.data.results,
+				loading : false
 			})
 		})).catch(errors => {
 				console.log(errors);
+				this.setState({
+					loading : false,
+					events : [],
+					weeklyEvents : []
+				})
 			})
 		}
 
@@ -469,50 +503,50 @@ export default class Home extends Component {
 	}
 
 	searchFieldChange(event){
-		if(event.target.value === ''){
-			this.searchEvent(event)
-		}
 		this.setState({
 			search : event.target.value
 		})
 	}
 
 	searchEvent(event){
-		this.setState({
-			loading : true
-		})
-		var url = this.state.apiBaseUrl + 'event/allEvents/?search='+this.state.search;
-		axios.get(url,{ 'headers': { 'Authorization': this.state.authKey } })
-		.then(response => {
-			let nextClass = '';
-			let preClass = '';
-			if(response.data.next !== null){
-				nextClass = 'newLink'
-			}else{
-				nextClass = 'noLink'
-			}
-			if(response.data.previous !== null){
-				preClass = 'newLink'
-			}else{
-				preClass = 'noLink'
-			}
+		if(this.state.search !== ''){
 			this.setState({
-				events:response.data.results,
-				nextLink : response.data.next,
-				prevLink : response.data.previous,
-				nextBtnClass : nextClass,
-				prevBtnClass : preClass,
-				loading : false,
+				loading : true
 			})
-		})
-		.catch(error =>{
-			console.log(error);
-		})
-		event.preventDefault();
+			var url = this.state.apiBaseUrl + 'event/allEvents/?search='+this.state.search;
+			axios.get(url,{ 'headers': { 'Authorization': this.state.authKey } })
+			.then(response => {
+				let nextClass = '';
+				let preClass = '';
+				if(response.data.next !== null){
+					nextClass = 'newLink'
+				}else{
+					nextClass = 'noLink'
+				}
+				if(response.data.previous !== null){
+					preClass = 'newLink'
+				}else{
+					preClass = 'noLink'
+				}
+				this.setState({
+					events:response.data.results,
+					nextLink : response.data.next,
+					prevLink : response.data.previous,
+					nextBtnClass : nextClass,
+					prevBtnClass : preClass,
+					search : '',
+					loading : false,
+				})
+			})
+			.catch(error =>{
+				console.log(error);
+			})
+			event.preventDefault();
+		}
 	}
 
 	render() {
-		var noData = <h1 className='noData'>Sorry No Data</h1>
+		var noData = <h1 className='noData'>Sorry No Event Yet</h1>
 		var dataLoader = <Loader
 			type="Oval"
 			color="#ffa257"
@@ -521,6 +555,13 @@ export default class Home extends Component {
 			className='noData'
 			timeout={0} //time in millisecond
 		/>
+		var weeklyEventsDiv = [];
+		if(this.state.weeklyEvents.length > 0){
+    		
+    		for(var i = 0 ; i < this.state.weeklyEvents.length ; i++){
+    			weeklyEventsDiv.push(this.eventsList(this.state.weeklyEvents[i]))
+    		}
+    	}
     	var resultedDiv = [];
     	if(this.state.events.length > 0){
     		
@@ -556,7 +597,7 @@ export default class Home extends Component {
 						<h2 className="main">Next<span style={{color:'#ffa257'}}>Exibition</span></h2>
 						<p id="one">Find interesting shows & conferences to attend</p>
 						<input type="text" className="sbar primaryColor" value={this.state.search} placeholder="Search by city category #tag or by name" name="search" onChange={(e)=>this.searchFieldChange(e)} onKeyPress={(e) => { if(e.key === 'Enter'){this.searchEvent(e)}}} />
-						<button className="newBtn button" onClick={(e)=>this.searchEvent(e)}><span style={{color:'white'}}>Search</span></button>
+						<button className="newBtn button" disabled={this.state.loading} onClick={(e)=>this.searchEvent(e)}><span style={{color:'white'}}>Search</span></button>
 					</div>
 					<div className="col-md-3"></div>
 				</div>
@@ -577,6 +618,11 @@ export default class Home extends Component {
 							</div>
 
 							<div className="col-md-8 col-sm-12 col-lg-8">
+								<h6 className="weeklyEvnts">Events in this week</h6>
+								<div className="row events">
+									{this.state.loading ? (dataLoader) : (weeklyEventsDiv.length > 0 ? weeklyEventsDiv : noData) }
+								</div>
+								<h6 className="weeklyEvnts">Upcoming Events</h6>
 								<div className="row events">
 									{this.state.loading ? (dataLoader) : (resultedDiv.length > 0 ? resultedDiv : noData) }
 								</div>
