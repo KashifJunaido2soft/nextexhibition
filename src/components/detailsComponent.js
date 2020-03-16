@@ -26,7 +26,58 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from 'react-loader-spinner';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
+//------------------imports for react custom share------------------
+import { css } from 'emotion';
+// import icons
+import { FaTwitter } from 'react-icons/fa'
+import { FaFacebook } from 'react-icons/fa'
+import { FaLinkedin } from 'react-icons/fa'
+// import react-custom-share components
+import { ShareButtonCircle , ShareBlockStandard } from 'react-custom-share';
 
+const FbShareComponent = props => {
+	// create object with props for shareBlock
+	const shareBlockProps = {
+	  url: props.url,
+	  button: ShareButtonCircle,
+	  buttons: [
+		{ network: 'Facebook', icon: FaFacebook },
+	  ],
+	  text: props.title,
+	  longtext: props.subTitle,
+	};
+	
+	return <ShareBlockStandard {...shareBlockProps} />;
+};
+
+const LinkdInShareComponent = props => {
+	// create object with props for shareBlock
+	const shareBlockProps = {
+	  url: props.url,
+	  button: ShareButtonCircle,
+	  buttons: [
+		{ network: 'Linkedin', icon: FaLinkedin },
+	  ],
+	  text: props.title,
+	  longtext: props.subTitle,
+	};
+	return <ShareBlockStandard {...shareBlockProps} />;
+};
+
+const TwtrShareComponent = props => {
+	// create object with props for shareBlock
+	const shareBlockProps = {
+	  url: props.url,
+	  button: ShareButtonCircle,
+	  buttons: [
+		{ network: "Twitter", icon: FaTwitter },
+	  ],
+	  text: props.title,
+	  longtext: props.subTitle,
+	};
+	return <ShareBlockStandard {...shareBlockProps} />;
+};
+//------------------imports for react custom share ends here------------------
 const useStyles = makeStyles(theme => ({
 	root: {
 		color: '#ffffff',
@@ -317,24 +368,23 @@ class Details extends Component {
 		let endingDay = endDateArr[2];
 		return(
 			<div className="row">
-				<div className="col-md-2 headimg">
+				<div className="col-md-2">
 					<img className="mainImg" src={event.main_image} alt="ExpoImg" onClick={()=>this.showSlider()}/>
 				</div>
-				<div className="col-md-8 headcontent">
-					<p className="basetxtColor">
-						{eventTags.map((m1) => {return <span className='bodytags'>{m1}</span>})}
-					</p>
+				<div className="col-md-9 headcontent">
+					{eventTags.map((m1) => {return <span className='bodytags'>{m1}</span>})}
 					<h3 className="basetxtColor">{event.event_name}</h3>
 					<div className="row">
 						<div className="col-md-1"><SvgClockIcon/></div>
-		<div className="col-md-6"><p className="basetxtColor">{month+" "+day+" "+year} - {endingMonth+" "+endingDay+" "+endingYear}</p></div>
+						<div className="col-md-6"><p className="basetxtColor">{month+" "+day+" "+year} - {endingMonth+" "+endingDay+" "+endingYear}</p></div>
+						<div className="col-md-5"></div>
 					</div>
 					<div className="row">
 						<div className="col-md-1"><LocationIcon/></div>
 						<div className="col-md-6"><p className="basetxtColor">{event.event_address}</p></div>
+						<div className="col-md-5"></div>
 					</div>
 				</div>
-				<div className="col-md-1"></div>
 			</div>
 		)
 	}
@@ -354,9 +404,10 @@ class Details extends Component {
 			exibBtnCls = 'selectionBtn';
 			imgsBtnCls = 'selectionBtn';
 			spkrBtnCls = 'selectionBtn';
-			descBody = <p className="primaryColor eventData">
-				{event.event_description}
-			</p>;
+			let resultedDataArr = event.event_description.split("\\n");
+			descBody = <div class="event_desc_container">
+				{resultedDataArr.map((para)=>{return <p className="primaryColor">{para}</p>})}
+			</div>
 		}
 		else if(this.state.Reviews === '1'){
 			abuotbtncls = 'selectionBtn';
@@ -365,7 +416,7 @@ class Details extends Component {
 			imgsBtnCls = 'selectionBtn';
 			spkrBtnCls = 'selectionBtn';
 			descBody = <p className="primaryColor eventData">
-				Some Reviews
+				
 			</p>;
 		}
 		else if(this.state.Exibitors  === '1'){
@@ -374,7 +425,7 @@ class Details extends Component {
 			exibBtnCls = 'selectionBtn clrBrdr';
 			imgsBtnCls = 'selectionBtn';
 			spkrBtnCls = 'selectionBtn';
-			descBody = <p className="primaryColor eventData">Some Exibitors
+			descBody = <p className="primaryColor eventData">
 			</p>;
 			
 		}
@@ -396,7 +447,7 @@ class Details extends Component {
 			imgsBtnCls = 'selectionBtn';
 			spkrBtnCls = 'selectionBtn clrBrdr';
 			descBody = <p className="primaryColor eventData">
-			Some speakers</p>;
+			</p>;
 		}
 		return(
 			<div>
@@ -516,10 +567,16 @@ class Details extends Component {
 		</div>
 		var shareUrl = "";
 		var title = "";
+		var subTitle = "";
 		var sliderCarousel = "";
  		if(this.state.eventDeatail !== ''  && this.state.eventTags.length > 0){
 			shareUrl = this.state.baseLink + 'details/'+ this.state.eventDeatail.id;
-			title = <a href={shareUrl} target="_blank" rel="noopener noreferrer">{this.state.eventDeatail.event_name}</a>
+			title = this.state.eventDeatail.event_name;
+			if(this.state.eventDeatail.event_description.length > 100){
+				subTitle = this.state.eventDeatail.event_description.substring(0,100);
+			}else{
+				subTitle = this.state.eventDeatail.event_description;
+			}
 			resultedBody = this.makeBody(this.state.eventDeatail);
 			sliderCarousel = <div className={this.state.imageSlider}>
 				<Carousel showArrows={true} showThumbs={false} autoPlay={true} interval={3000} infiniteLoop={true}>
@@ -546,49 +603,31 @@ class Details extends Component {
 					</div>
 					<div className="row">
 						<div className="col-md-1 col-sm-1 socialIcons"></div>
-						<div className="col-md-2 col-sm-2 socialIcons">
-							<FacebookShareButton
-									url={shareUrl}
-									quote={title}>
-									<FacebookIcon
-									size={40}
-									round />
-							</FacebookShareButton>
-						</div>
-						<div className="col-md-2 col-sm-2 socialIcons">
-							<TwitterShareButton
-									url={shareUrl}
-									quote={title}>
-									<TwitterIcon
-									size={40}
-									round />
-							</TwitterShareButton>
-						</div>
-						<div className="col-md-2 col-sm-2 socialIcons">
+						<div className="col-md-2 col-sm-2 socialIcons1">
 							<WhatsappShareButton
 									url={shareUrl}
 									quote={title}>
 									<WhatsappIcon
-									size={40}
+									size={45}
 									round />
 							</WhatsappShareButton>
 						</div>
 						<div className="col-md-2 col-sm-2 socialIcons">
-							<LinkedinShareButton
-									url={shareUrl}
-									quote={title}>
-									<LinkedinIcon
-									size={40}
-									round />
-							</LinkedinShareButton>
+							<FbShareComponent url={shareUrl} title={title} subTitle={subTitle}/>
+						</div>
+						<div className="col-md-2 col-sm-2 socialIcons">
+							<LinkdInShareComponent url={shareUrl} title={title} subTitle={subTitle}/>
+						</div>
+						<div className="col-md-2 col-sm-6 socialIcons">
+							<TwtrShareComponent url={shareUrl} title={title} subTitle={subTitle}/>
 						</div>
 						<div className="col-md-1 col-sm-1 socialIcons"></div>
-						<div className="col-md-2 col-sm-2 socialIcons" onClick={()=>this.hideSocialDiv()}><SvgMaterialIcons/></div>
+						<div className="col-md-2 col-sm-2 socialIcons1" onClick={()=>this.hideSocialDiv()}><SvgMaterialIcons/></div>
 					</div>
 				</div>
 					{sliderCarousel}
 				<div class={this.state.bodyClass} onClick={()=>this.hideSlider()}>
-					<div className="row head1">
+					<div className="head1">
 						{detailHeader}
 					</div>
 					<div className="row featuredRow">

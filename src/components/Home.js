@@ -546,7 +546,7 @@ export default class Home extends Component {
 	}
 
 	render() {
-		var noData = <h1 className='noData'>Sorry No Event Yet</h1>
+		var noData = <h1 className='noData'>Sorry No Event Found</h1>
 		var dataLoader = <Loader
 			type="Oval"
 			color="#ffa257"
@@ -618,13 +618,16 @@ export default class Home extends Component {
 							</div>
 
 							<div className="col-md-8 col-sm-12 col-lg-8">
-								<h6 className="weeklyEvnts">Events in this week</h6>
+								{this.state.loading ? (<h6 className="weeklyEvnts">Events in this week</h6>) : (weeklyEventsDiv.length > 0 ? <h6 className="weeklyEvnts">Events in this week</h6> : <h6></h6>) }
 								<div className="row events">
-									{this.state.loading ? (dataLoader) : (weeklyEventsDiv.length > 0 ? weeklyEventsDiv : noData) }
+									{this.state.loading ? (dataLoader) : (weeklyEventsDiv) }
 								</div>
 								<h6 className="weeklyEvnts">Upcoming Events</h6>
 								<div className="row events">
-									{this.state.loading ? (dataLoader) : (resultedDiv.length > 0 ? resultedDiv : noData) }
+									{this.state.loading ? (dataLoader):<span></span>}
+								</div>
+								<div className="row events">
+									{this.state.loading ? (resultedDiv) : (resultedDiv.length > 0 ? resultedDiv : noData)}
 								</div>
 								<div className="row">
 									<div className="col-md-6 col-sm-6 previousBtn">

@@ -44,7 +44,7 @@ export default class Footer extends Component{
 								<img className="appStoreImg" src={appStore} alt="get from app store" onClick={() => this.appStoreLink()}/>
 							</div>
 							<div className="col-md-5 col-sm-4 playStoreDiv">
-								<img className="playStoreImg" src={playStore} alt="get from play store" onClick={() => this.playStoreLink()}/>
+								<a href="https://play.google.com/store/apps/details?id=com.o2soft.nextexibition" target="_blank"><img className="playStoreImg" src={playStore} alt="get from play store"/></a>
 							</div>
 							<div className="col-md-2 col-sm-12"></div>
 						</div>

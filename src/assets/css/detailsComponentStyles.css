@@ -348,6 +348,11 @@ img.extraImgs{
 	padding-left: 1%;
 }
 
+.socialIcons1{
+	padding-top: 2.8%;
+	padding-left: 1%;
+}
+
 .inviteText{
 	text-align: center;
 	padding : 5%;
@@ -369,9 +374,8 @@ img.extraImgs{
 	height:100vh;
 	min-height:100vh;
 }
-
-.eventData{
-	padding : 3%;
+.event_desc_container{
+	padding: 3%;
 }
 
 .showImageSlider{
